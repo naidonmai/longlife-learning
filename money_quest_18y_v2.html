@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภารกิจ 7 ด่านเงินล้านวัย 18</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F5C842;
+  --gold-dim: #A8892C;
+  --green: #22C55E;
+  --green-dim: #15803D;
+  --blue: #38BDF8;
+  --blue-dim: #0369A1;
+  --orange: #FB923C;
+  --red: #F87171;
+  --bg: #0A0C10;
+  --bg2: #111520;
+  --bg3: #1A1F2E;
+  --bg4: #222840;
+  --border: rgba(255,255,255,0.08);
+  --text: #E8EAF0;
+  --muted: #6B7280;
+  --font-display: 'Chakra Petch', monospace;
+  --font-body: 'Sarabun', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245,200,66,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,200,66,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== HEADER ===== */
+.hero {
+  text-align: center;
+  padding: 2.5rem 0 2rem;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  padding: 4px 14px;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.hero h1 span { color: var(--gold); }
+
+.hero p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 0 auto 1.5rem;
+}
+
+/* ===== XP BAR ===== */
+.xp-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.xp-left {}
+.xp-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.xp-track {
+  height: 10px;
+  background: var(--bg4);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.xp-fill::after {
+  content: '';
+  position: absolute;
+  right: -2px; top: 0;
+  width: 4px; height: 100%;
+  background: #fff;
+  border-radius: 99px;
+  opacity: 0.7;
+}
+
+.xp-nums {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.xp-nums span { color: var(--gold); font-weight: 600; }
+
+.stats-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.stat-chip {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  text-align: center;
+}
+
+.stat-chip .num {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-chip .lbl {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ===== MISSION CARDS ===== */
+.missions { display: flex; flex-direction: column; gap: 1rem; }
+
+.mission-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.mission-card .mission-header:hover { opacity: 0.9; }
+.mission-card.locked { opacity: 0.5; pointer-events: none; }
+
+.mission-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.mission-icon {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.mission-meta { flex: 1; }
+
+.mission-num {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.mission-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.mission-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.mission-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.xp-badge {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.progress-mini {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.mission-body {
+  display: none;
+  border-top: 1px solid var(--border);
+  padding: 1.25rem;
+  animation: slideDown 0.25s ease;
+}
+
+.mission-body.open { display: block; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== QUESTS ===== */
+.quest-intro {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-radius: 8px;
+  border-left: 3px solid var(--gold-dim);
+}
+
+.quest-intro a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.quest-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.quest-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.quest-item:hover { background: var(--bg4); }
+
+.quest-item.done {
+  background: rgba(34,197,94,0.07);
+  border-color: rgba(34,197,94,0.2);
+}
+
+.quest-cb {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid var(--muted);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.quest-item.done .quest-cb {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.quest-content { flex: 1; }
+
+.quest-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.quest-item.done .quest-text {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.quest-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+}
+
+.tag-learn { background: rgba(56,189,248,0.12); color: var(--blue); }
+.tag-action { background: rgba(34,197,94,0.12); color: var(--green); }
+.tag-calc { background: rgba(245,200,66,0.12); color: var(--gold); }
+.tag-think { background: rgba(251,146,60,0.12); color: var(--orange); }
+.tag-btc { background: rgba(251,146,60,0.15); color: #FDBA74; border: 1px solid rgba(251,146,60,0.2); }
+.tag-eth { background: rgba(138,116,220,0.15); color: #C4B5FD; border: 1px solid rgba(138,116,220,0.2); }
+.tag-us { background: rgba(56,189,248,0.15); color: #7DD3FC; border: 1px solid rgba(56,189,248,0.2); }
+
+.quest-xp {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--gold-dim);
+  min-width: 40px;
+  text-align: right;
+  padding-top: 2px;
+}
+
+/* ===== CALCULATOR WIDGETS ===== */
+.calc-widget {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.calc-widget h4 {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.calc-grid.single { grid-template-columns: 1fr; }
+
+.calc-field label {
+  font-size: 12px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.calc-field input, .calc-field select {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.calc-field input:focus, .calc-field select:focus {
+  border-color: var(--gold-dim);
+}
+
+.calc-result-box {
+  grid-column: 1 / -1;
+  background: var(--bg3);
+  border: 1px solid rgba(245,200,66,0.2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.calc-result-label { font-size: 13px; color: var(--muted); }
+.calc-result-val {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* Budget bars */
+.budget-bars { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.bb-row { display: flex; align-items: center; gap: 10px; }
+.bb-label { font-size: 13px; color: var(--muted); min-width: 130px; }
+.bb-track { flex: 1; height: 8px; background: var(--bg4); border-radius: 99px; overflow: hidden; }
+.bb-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+.bb-val { font-family: var(--font-display); font-size: 13px; font-weight: 600; min-width: 80px; text-align: right; }
+
+/* Compound interest chart */
+.ci-bars { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 12px; }
+.ci-bar { flex: 1; border-radius: 4px 4px 0 0; transition: height 0.6s ease; min-height: 6px; display: flex; align-items: flex-end; justify-content: center; }
+.ci-bar-label { font-size: 9px; color: var(--muted); margin-bottom: 3px; }
+
+/* ===== REWARD POPUP ===== */
+.reward-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.reward-overlay.show { display: flex; }
+
+.reward-box {
+  background: var(--bg2);
+  border: 1px solid var(--gold-dim);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 340px;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.reward-icon { font-size: 48px; margin-bottom: 0.75rem; }
+.reward-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.reward-desc { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 1.25rem; }
+.reward-xp {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.reward-xp span { color: var(--gold); }
+
+.btn-close {
+  background: var(--gold);
+  color: #0A0C10;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 28px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+.btn-close:hover { opacity: 0.85; }
+
+/* ===== FINAL REWARD ===== */
+.final-banner {
+  display: none;
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  border: 1px solid var(--gold-dim);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+.final-banner.show { display: block; }
+.final-banner h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.final-banner p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+
+/* Colors for missions */
+.m1 .mission-icon { background: rgba(245,200,66,0.15); color: var(--gold); }
+.m2 .mission-icon { background: rgba(56,189,248,0.15); color: var(--blue); }
+.m3 .mission-icon { background: rgba(34,197,94,0.15); color: var(--green); }
+.m4 .mission-icon { background: rgba(251,146,60,0.15); color: var(--orange); }
+.m5 .mission-icon { background: rgba(248,113,113,0.15); color: var(--red); }
+.m6 .mission-icon { background: rgba(138,116,220,0.15); color: #C4B5FD; }
+.m7 .mission-icon { background: rgba(245,200,66,0.2); color: var(--gold); }
+
+.m1 .xp-badge { background: rgba(245,200,66,0.15); color: var(--gold); }
+.m2 .xp-badge { background: rgba(56,189,248,0.15); color: var(--blue); }
+.m3 .xp-badge { background: rgba(34,197,94,0.15); color: var(--green); }
+.m4 .xp-badge { background: rgba(251,146,60,0.15); color: var(--orange); }
+.m5 .xp-badge { background: rgba(248,113,113,0.15); color: var(--red); }
+.m6 .xp-badge { background: rgba(138,116,220,0.15); color: #C4B5FD; }
+.m7 .xp-badge { background: rgba(245,200,66,0.2); color: var(--gold); }
+
+.m1.active, .m1:hover { border-color: rgba(245,200,66,0.3); }
+.m2.active, .m2:hover { border-color: rgba(56,189,248,0.3); }
+.m3.active, .m3:hover { border-color: rgba(34,197,94,0.3); }
+.m4.active, .m4:hover { border-color: rgba(251,146,60,0.3); }
+.m5.active, .m5:hover { border-color: rgba(248,113,113,0.3); }
+.m6.active, .m6:hover { border-color: rgba(138,116,220,0.3); }
+.m7.active, .m7:hover { border-color: rgba(245,200,66,0.35); }
+
+.completed-stamp {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.link-ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--blue);
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid rgba(56,189,248,0.25);
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.link-ref:hover { background: rgba(56,189,248,0.1); }
+
+@media (max-width: 600px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .xp-section { grid-template-columns: 1fr; }
+  .stats-row { flex-direction: row; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">⚔ Money Quest · MyMoney.gov Edition</div>
+    <h1>ภารกิจ 7 ด่าน<br><span>เงินล้านวัย 18</span></h1>
+    <p>เก็บ XP ทุกภารกิจที่เสร็จ · ผ่านครบ 7 ด่าน = พื้นฐานการเงินแบบ Hedge Fund<br>เน้นกองทุนอเมริกา + BTC + ETH</p>
+  </div>
+
+  <!-- XP BAR -->
+  <div class="xp-section">
+    <div class="xp-left">
+      <div class="xp-label">⚡ TOTAL XP PROGRESS</div>
+      <div class="xp-track">
+        <div class="xp-fill" id="xpFill" style="width:0%"></div>
+      </div>
+      <div class="xp-nums"><span id="xpCurrent">0</span> / <span id="xpTotal">700</span> XP · ด่านที่ผ่าน <span id="missionsDone">0</span>/7</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-chip"><div class="num" id="streakDays">0</div><div class="lbl">Quests Done</div></div>
+      <div class="stat-chip"><div class="num" id="rankLabel">—</div><div class="lbl">Rank</div></div>
+    </div>
+  </div>
+
+  <!-- MISSIONS -->
+  <div class="missions" id="missionsContainer"></div>
+
+  <!-- FINAL BANNER -->
+  <div class="final-banner" id="finalBanner">
+    <div style="font-size:48px;margin-bottom:1rem">🏆</div>
+    <h2>ยินดีด้วย! ผ่านครบ 7 ด่านแล้ว!</h2>
+    <p style="margin-top:0.75rem">ตอนนี้คุณมีพื้นฐานการเงินที่แข็งแกร่งกว่าคนไทยส่วนใหญ่<br>
+    ขั้นต่อไป: เปิดบัญชีลงทุน · ซื้อ S&P500 ETF · DCA BTC/ETH ทุกเดือน<br>
+    <br>
+    <strong style="color:var(--gold)">พ่อ MoyMod ว่าไง: ความรู้ทางการเงินคือ Layer แรก ก่อนลงทุนจริง 🔥</strong></p>
+  </div>
+
+</div>
+
+<!-- REWARD POPUP -->
+<div class="reward-overlay" id="rewardOverlay">
+  <div class="reward-box">
+    <div class="reward-icon" id="rewardIcon">🎖</div>
+    <div class="reward-title" id="rewardTitle">ด่านผ่านแล้ว!</div>
+    <div class="reward-desc" id="rewardDesc"></div>
+    <div class="reward-xp">+<span id="rewardXP">100</span> XP</div>
+    <button class="btn-close" onclick="closeReward()">รับ XP ✓</button>
+  </div>
+</div>
+
+<script>
+const missions = [
+  {
+    id: 1, cls: 'm1',
+    icon: '💰', title: 'รู้จักเงินของตัวเอง', sub: 'EARN · Net Income · Benefits',
+    xp: 100, ref: 'https://www.mymoney.gov/earn',
+    refLabel: 'mymoney.gov/earn',
+    reward: { icon: '💰', title: 'Master of Income', desc: 'รู้แล้วว่าเงินมาจากไหน และหักอะไรออกบ้าง เป็นก้าวแรกที่สำคัญที่สุด' },
+    intro: 'ก่อนจะรวยได้ ต้องรู้ว่ามีเงินจริงเท่าไร เงินในมือจริง (Net Income) ≠ รายได้รวม · เป็นพื้นฐานของทุกอย่างที่ตามมา',
+    quests: [
+      { text: 'จดรายได้ทั้งหมดต่อเดือน (เงินพ่อแม่ให้ + พาร์ทไทม์ + อื่นๆ)', tags: ['action','calc'] },
+      { text: 'ระบุค่าใช้จ่ายที่ต้องจ่ายทุกเดือนโดยไม่มีทางหลีกเลี่ยงได้', tags: ['action'] },
+      { text: 'คำนวณ Net Income จริงด้วย Calculator ด้านล่าง', tags: ['calc'] },
+      { text: 'ลิสต์สวัสดิการที่พ่อแม่จ่ายให้อยู่ คิดเป็นมูลค่าเงินต่อเดือน', tags: ['think','action'] }
+    ],
+    widget: 'net_income'
+  },
+  {
+    id: 2, cls: 'm2',
+    icon: '📊', title: 'งบประมาณ 50/30/20', sub: 'SPEND · Budget · Tracking',
+    xp: 100, ref: 'https://www.mymoney.gov/spend',
+    refLabel: 'mymoney.gov/spend',
+    reward: { icon: '📊', title: 'Budget Warrior', desc: 'สร้างงบประมาณได้แล้ว! ทำแบบนี้ทุกเดือน และเงินจะไม่หายไปไหนอีก' },
+    intro: 'ทุกบาทที่ออกไปต้องมีแผน กฎ 50/30/20 คือวิธีแบ่งเงินที่ง่ายที่สุดและได้ผลจริง ใช้กันทั่วโลก',
+    quests: [
+      { text: 'แบ่งเงินด้วยกฎ 50/30/20 ด้วย Calculator ด้านล่าง', tags: ['calc'] },
+      { text: 'บันทึกทุกรายจ่ายวันนี้ตั้งแต่ตื่นนอนถึงเข้านอน (เล็กน้อยแค่ไหนก็บันทึก)', tags: ['action'] },
+      { text: 'จัดหมวดหมู่รายจ่ายวันนี้: Need / Want / Save', tags: ['think','action'] },
+      { text: 'ดาวน์โหลด Budgeting Worksheet ฟรีจาก MyMoney.gov และกรอกข้อมูลจริง', tags: ['learn','action'] }
+    ],
+    widget: 'budget_502030'
+  },
+  {
+    id: 3, cls: 'm3',
+    icon: '🛡', title: 'Emergency Fund', sub: 'SAVE · 3 เดือน · Safety Net',
+    xp: 100, ref: 'https://www.mymoney.gov/saveandinvest',
+    refLabel: 'mymoney.gov/saveandinvest',
+    reward: { icon: '🛡', title: 'Fortress Built', desc: 'มี Emergency Fund = มีเกราะป้องกัน เรื่องไม่คาดฝันในชีวิตจะไม่พัง' },
+    intro: 'ก่อนลงทุนอะไรทั้งนั้น ต้องมีเงินฉุกเฉินก่อน 3 เดือน = ขั้นต่ำที่ทุกคนต้องมี อย่าลงทุนเงินที่อาจต้องใช้',
+    quests: [
+      { text: 'คำนวณค่าใช้จ่ายขั้นต่ำต่อเดือน (กิน + เดินทาง + โทรศัพท์ + อื่นๆ) คูณ 3', tags: ['calc'] },
+      { text: 'วางแผนว่าจะออมเดือนละเท่าไรถึงจะถึง Goal Emergency Fund ใน 6 เดือน', tags: ['action','calc'] },
+      { text: 'เปิดบัญชีออมทรัพย์แยกต่างหากสำหรับ Emergency Fund โดยเฉพาะ', tags: ['action'] },
+      { text: 'ตั้ง Auto Transfer จากบัญชีเงินเดือน → บัญชี EF ทุกเดือน', tags: ['action'] }
+    ],
+    widget: 'emergency_fund'
+  },
+  {
+    id: 4, cls: 'm4',
+    icon: '⚔', title: 'ดอกเบี้ยทบต้น vs หนี้', sub: 'BORROW · APR · Credit Score',
+    xp: 100, ref: 'https://www.mymoney.gov/borrow',
+    refLabel: 'mymoney.gov/borrow',
+    reward: { icon: '⚔', title: 'Debt Slayer', desc: 'เข้าใจหนี้แล้ว! ดอกเบี้ยทบต้นทำงานเพื่อคุณ (ถ้าลงทุน) หรือต่อต้านคุณ (ถ้ามีหนี้)' },
+    intro: 'ดอกเบี้ยทบต้น (Compound Interest) คือพลังที่ยิ่งใหญ่ที่สุดในการเงิน ใช้มันให้ถูกทาง มันทำงานให้คุณ ใช้ผิดทาง มันกิน คุณ',
+    quests: [
+      { text: 'คำนวณ: ถ้าค้างบัตรเครดิต 10,000 บาท ดอกเบี้ย 18%/ปี จ่ายขั้นต่ำ — จ่ายหมดในกี่เดือน?', tags: ['calc'] },
+      { text: 'เขียนกฎ 3 ข้อส่วนตัวเกี่ยวกับบัตรเครดิตที่จะยึดถือตลอดชีวิต', tags: ['think','action'] },
+      { text: 'ค้นหาว่า NCB (Credit Bureau ไทย) คืออะไร และ Credit Score ดี/แย่ต่างกันอย่างไร', tags: ['learn'] },
+      { text: 'ลิสต์พฤติกรรม 5 อย่างที่สร้าง Credit Score ดี', tags: ['action'] }
+    ],
+    widget: 'compound_debt'
+  },
+  {
+    id: 5, cls: 'm5',
+    icon: '🌍', title: 'กองทุนอเมริกา S&P 500', sub: 'US Market · ETF · Index Fund',
+    xp: 100, ref: 'https://www.mymoney.gov/saveandinvest',
+    refLabel: 'mymoney.gov/saveandinvest',
+    reward: { icon: '🌍', title: 'Global Investor', desc: 'ลงทุนในบริษัทใหญ่ที่สุดของโลก 500 บริษัทพร้อมกัน ด้วยคลิกเดียว' },
+    intro: 'S&P 500 = ตะกร้าหุ้น 500 บริษัทใหญ่สุดของอเมริกา เช่น Apple, Google, Tesla เฉลี่ย +10%/ปีในช่วง 50 ปีที่ผ่านมา Warren Buffett แนะนำนักลงทุนทั่วไปให้ลงทุนใน Index Fund นี้',
+    quests: [
+      { text: 'ศึกษา S&P 500 คืออะไร ทำไม Warren Buffett ถึงแนะนำให้ลงทุน', tags: ['learn','us'] },
+      { text: 'เปรียบเทียบ: Vanguard VOO vs iShares IVV ต่างกันอย่างไร Expense Ratio เท่าไร?', tags: ['learn','us'] },
+      { text: 'คำนวณด้วย Calculator: DCA 3,000 บาท/เดือน ที่ 10%/ปี ใน 10 ปี จะได้เท่าไร?', tags: ['calc','us'] },
+      { text: 'ศึกษาวิธีเปิดบัญชีลงทุนตลาดอเมริกาจากไทย (เช่น Interactive Brokers หรือ Webull)', tags: ['learn','action','us'] }
+    ],
+    widget: 'sp500_dca'
+  },
+  {
+    id: 6, cls: 'm6',
+    icon: '₿', title: 'BTC & ETH คืออะไร', sub: 'Bitcoin · Ethereum · Digital Asset',
+    xp: 100, ref: 'https://www.mymoney.gov/protect',
+    refLabel: 'mymoney.gov/protect',
+    reward: { icon: '₿', title: 'Crypto Scholar', desc: 'เข้าใจ BTC และ ETH ในระดับที่นักลงทุนสถาบันใช้วิเคราะห์' },
+    intro: 'Bitcoin = Gold ดิจิทัล ซัพพลาย 21 ล้านเหรียญตลอดกาล · Ethereum = เครือข่ายสัญญาอัจฉริยะ ใช้จ่ายค่าธรรมเนียมของ DeFi, NFT, RWA ทั้งโลก · ทั้งคู่เป็น Asset ระดับสถาบัน BlackRock มีทั้งคู่แล้ว',
+    quests: [
+      { text: 'อ่าน: ทำไม Bitcoin ซัพพลายถึงมีแค่ 21 ล้านเหรียญ และ Halving คืออะไร?', tags: ['learn','btc'] },
+      { text: 'อ่าน: Ethereum คืออะไร ต่างจาก Bitcoin อย่างไร และใช้ทำอะไร?', tags: ['learn','eth'] },
+      { text: 'ศึกษา: BlackRock IBIT (BTC ETF) และ ETHA (ETH ETF) ลงทุนผ่านตลาดอเมริกาได้', tags: ['learn','btc','eth','us'] },
+      { text: 'ทำความเข้าใจความเสี่ยง: BTC/ETH ผันผวนสูงมาก ควรเป็นสัดส่วนเล็กน้อยของพอร์ต', tags: ['think','btc','eth'] }
+    ],
+    widget: null
+  },
+  {
+    id: 7, cls: 'm7',
+    icon: '🚀', title: 'สร้างพอร์ตแรกในชีวิต', sub: 'Portfolio · DCA · Long-term Strategy',
+    xp: 100, ref: 'https://www.mymoney.gov/saveandinvest',
+    refLabel: 'mymoney.gov/saveandinvest',
+    reward: { icon: '🏆', title: 'MILLIONAIRE MINDSET', desc: 'ผ่านครบ 7 ด่านแล้ว! ตอนนี้คุณมีทั้งความรู้และแผน พร้อมสู่เส้นทางเงินล้าน' },
+    intro: 'ถึงเวลาสร้างพอร์ตจริงๆ ด้วยกลยุทธ์ DCA (Dollar-Cost Averaging) = ลงทุนสม่ำเสมอ ไม่ต้องจับ Timing ตลาด ลงทุนในทุกสภาวะ ผลตอบแทนระยะยาวชนะ Market Timer เกือบทุกราย',
+    quests: [
+      { text: 'ออกแบบสัดส่วนพอร์ตแรกของตัวเอง: S&P500 ETF % | BTC % | ETH % | Cash %', tags: ['action','us','btc','eth'] },
+      { text: 'คำนวณ: ถ้าลงทุน 2,000 บาท/เดือน แบ่งตามสัดส่วนที่ออกแบบไว้ ครบ 10 ปีจะได้เท่าไร?', tags: ['calc'] },
+      { text: 'ตั้งกฎ DCA: วันที่เท่าไรของเดือน จะลงทุนเท่าไร ในอะไรบ้าง — เขียนเป็น Commitment', tags: ['action','think'] },
+      { text: 'อ่าน: ทำไม HODL (ถือระยะยาว) ในตลาดขาลงถึงสำคัญมาก? ดูกราฟ BTC Cycle ย้อนหลัง', tags: ['learn','btc','eth'] }
+    ],
+    widget: 'portfolio_builder'
+  }
+];
+
+let state = JSON.parse(localStorage.getItem('mm7_state') || '{"open":[],"done":{}}');
+
+function save() { localStorage.setItem('mm7_state', JSON.stringify(state)); }
+
+function getQuestsDone(mid) {
+  return missions.find(m=>m.id===mid).quests.filter((_,qi) => state.done[`${mid}-${qi}`]).length;
+}
+
+function getTotalXP() {
+  return missions.reduce((s,m) => {
+    const done = getQuestsDone(m.id);
+    const total = m.quests.length;
+    return s + Math.floor((done/total) * m.xp);
+  }, 0);
+}
+
+function getMissionsDone() {
+  return missions.filter(m => getQuestsDone(m.id) === m.quests.length).length;
+}
+
+function getRank(xp) {
+  if (xp < 100) return 'Rookie';
+  if (xp < 200) return 'Saver';
+  if (xp < 350) return 'Investor';
+  if (xp < 500) return 'Builder';
+  if (xp < 650) return 'Strategist';
+  return 'MASTER';
+}
+
+function updateXPBar() {
+  const xp = getTotalXP();
+  const total = missions.reduce((s,m) => s+m.xp, 0);
+  const pct = Math.round(xp/total*100);
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpCurrent').textContent = xp;
+  document.getElementById('xpTotal').textContent = total;
+  document.getElementById('missionsDone').textContent = getMissionsDone();
+  document.getElementById('streakDays').textContent = missions.reduce((s,m)=>s+getQuestsDone(m.id),0);
+  document.getElementById('rankLabel').textContent = getRank(xp);
+
+  if (getMissionsDone() === 7) {
+    document.getElementById('finalBanner').classList.add('show');
+  }
+}
+
+function toggleMission(mid) {
+  const idx = state.open.indexOf(mid);
+  if (idx === -1) state.open.push(mid);
+  else state.open.splice(idx, 1);
+  save();
+  renderCard(mid);
+}
+
+function toggleQuest(mid, qi) {
+  const key = `${mid}-${qi}`;
+  const wasDone = state.done[key];
+  state.done[key] = !wasDone;
+
+  const mission = missions.find(m=>m.id===mid);
+  const allDone = mission.quests.every((_,i)=>state.done[`${mid}-${i}`]);
+
+  save();
+
+  // Update only the specific quest item — do NOT re-render the whole card
+  const card = document.querySelector(`[data-mid="${mid}"]`);
+  const questItems = card.querySelectorAll('.quest-item');
+  const item = questItems[qi];
+  if (item) {
+    const isDone = state.done[key];
+    item.classList.toggle('done', isDone);
+    item.querySelector('.quest-cb').textContent = isDone ? '✓' : '';
+    item.querySelector('.quest-cb').style.background = isDone ? 'var(--green)' : '';
+    item.querySelector('.quest-cb').style.borderColor = isDone ? 'var(--green)' : '';
+    item.querySelector('.quest-cb').style.color = isDone ? '#fff' : '';
+    const txt = item.querySelector('.quest-text');
+    txt.style.textDecoration = isDone ? 'line-through' : '';
+    txt.style.color = isDone ? 'var(--muted)' : '';
+  }
+
+  // Update mission header right section
+  const done = getQuestsDone(mid);
+  const total = mission.quests.length;
+  const right = card.querySelector('.mission-right');
+  if (done === total) {
+    right.innerHTML = `<div class="completed-stamp">✓ CLEARED</div>`;
+    card.classList.add('completed');
+  } else {
+    right.innerHTML = `<div class="xp-badge">+${mission.xp} XP</div><div class="progress-mini">${done}/${total} quests</div>`;
+  }
+
+  updateXPBar();
+
+  if (!wasDone && allDone) {
+    setTimeout(() => showReward(mid), 200);
+  }
+}
+
+function showReward(mid) {
+  const m = missions.find(x=>x.id===mid);
+  document.getElementById('rewardIcon').textContent = m.reward.icon;
+  document.getElementById('rewardTitle').textContent = m.reward.title;
+  document.getElementById('rewardDesc').textContent = m.reward.desc;
+  document.getElementById('rewardXP').textContent = m.xp;
+  document.getElementById('rewardOverlay').classList.add('show');
+}
+
+function closeReward() {
+  document.getElementById('rewardOverlay').classList.remove('show');
+}
+
+
+
+function renderWidget(mission) {
+  if (!mission.widget) return '';
+
+  if (mission.widget === 'net_income') {
+    return `<div class="calc-widget">
+      <h4>⚡ Calculator · Net Income</h4>
+      <div class="calc-grid">
+        <div class="calc-field"><label>รายได้รวม (บาท/เดือน)</label><input type="number" id="w_gross" placeholder="5,000" oninput="calcNetIncome()"></div>
+        <div class="calc-field"><label>ค่าใช้จ่ายคงที่รายเดือน</label><input type="number" id="w_fixed" placeholder="1,500" oninput="calcNetIncome()"></div>
+        <div class="calc-result-box"><span class="calc-result-label">เงินในมือจริง (Net Income)</span><span class="calc-result-val" id="w_net">— ฿</span></div>
+      </div>
+    </div>`;
+  }
+
+  if (mission.widget === 'budget_502030') {
+    return `<div class="calc-widget">
+      <h4>⚡ Calculator · 50/30/20 Budget</h4>
+      <div class="calc-grid single">
+        <div class="calc-field"><label>รายได้สุทธิต่อเดือน (บาท)</label><input type="number" id="w_inc" placeholder="4,000" oninput="calcBudget()"></div>
+      </div>
+      <div class="budget-bars" id="w_budget_bars"></div>
+    </div>`;
+  }
+
+  if (mission.widget === 'emergency_fund') {
+    return `<div class="calc-widget">
+      <h4>⚡ Calculator · Emergency Fund Goal</h4>
+      <div class="calc-grid">
+        <div class="calc-field"><label>ค่าใช้จ่ายต่อเดือน (บาท)</label><input type="number" id="w_monthly" placeholder="6,000" oninput="calcEF()"></div>
+        <div class="calc-field"><label>ออมได้ต่อเดือน (บาท)</label><input type="number" id="w_save_mo" placeholder="1,000" oninput="calcEF()"></div>
+        <div class="calc-result-box"><span class="calc-result-label">EF Goal (3 เดือน) · ถึง Goal ใน</span><span class="calc-result-val" id="w_ef_result">— ฿ · — เดือน</span></div>
+      </div>
+    </div>`;
+  }
+
+  if (mission.widget === 'compound_debt') {
+    return `<div class="calc-widget">
+      <h4>⚡ Calculator · บัตรเครดิตดอกเบี้ยทบต้น</h4>
+      <div class="calc-grid">
+        <div class="calc-field"><label>ยอดค้างชำระ (บาท)</label><input type="number" id="w_debt" placeholder="10,000" oninput="calcDebt()"></div>
+        <div class="calc-field"><label>จ่ายต่อเดือน (บาท)</label><input type="number" id="w_pay" placeholder="500" oninput="calcDebt()"></div>
+        <div class="calc-result-box"><span class="calc-result-label">ดอกเบี้ยสะสมรวม · ใช้เวลาหมดหนี้</span><span class="calc-result-val" id="w_debt_result">— ฿ · — เดือน</span></div>
+      </div>
+    </div>`;
+  }
+
+  if (mission.widget === 'sp500_dca') {
+    return `<div class="calc-widget">
+      <h4>⚡ Calculator · DCA S&P 500</h4>
+      <div class="calc-grid">
+        <div class="calc-field"><label>DCA ต่อเดือน (บาท)</label><input type="number" id="w_dca" placeholder="3,000" oninput="calcSP500()"></div>
+        <div class="calc-field"><label>ระยะเวลา (ปี)</label><input type="number" id="w_yrs" placeholder="10" oninput="calcSP500()"></div>
+        <div class="calc-result-box"><span class="calc-result-label">เงินรวมที่ได้ (ที่ผลตอบแทน 10%/ปี)</span><span class="calc-result-val" id="w_sp_result">— ฿</span></div>
+      </div>
+    </div>`;
+  }
+
+  if (mission.widget === 'portfolio_builder') {
+    return `<div class="calc-widget">
+      <h4>⚡ Portfolio Builder · สัดส่วนพอร์ตแรก</h4>
+      <div class="calc-grid">
+        <div class="calc-field"><label>DCA รวมต่อเดือน (บาท)</label><input type="number" id="w_ptotal" placeholder="2,000" oninput="calcPortfolio()"></div>
+        <div class="calc-field"><label>S&P 500 ETF (%)</label><input type="number" id="w_psp" placeholder="60" oninput="calcPortfolio()"></div>
+        <div class="calc-field"><label>BTC (%)</label><input type="number" id="w_pbtc" placeholder="25" oninput="calcPortfolio()"></div>
+        <div class="calc-field"><label>ETH (%)</label><input type="number" id="w_peth" placeholder="15" oninput="calcPortfolio()"></div>
+      </div>
+      <div class="budget-bars" id="w_port_bars"></div>
+    </div>`;
+  }
+
+  return '';
+}
+
+function renderCard(mid) {
+  const mission = missions.find(m=>m.id===mid);
+  const isOpen = state.open.includes(mid);
+  const done = getQuestsDone(mid);
+  const total = mission.quests.length;
+  const allDone = done === total;
+
+  const card = document.querySelector(`[data-mid="${mid}"]`);
+  if (!card) return;
+
+  const body = card.querySelector('.mission-body');
+  body.innerHTML = `
+    <div class="quest-intro">
+      ${mission.intro}
+      <br><br>
+      <a class="link-ref" href="${mission.ref}" target="_blank">📖 ${mission.refLabel} ↗</a>
+    </div>
+    <div class="quest-grid">
+      ${mission.quests.map((q,qi)=>`
+        <div class="quest-item ${state.done[`${mid}-${qi}`]?'done':''}" onclick="event.stopPropagation();toggleQuest(${mid},${qi})">
+          <div class="quest-cb">${state.done[`${mid}-${qi}`]?'✓':''}</div>
+          <div class="quest-content">
+            <div class="quest-text">${q.text}</div>
+            <div class="quest-tags">
+              ${q.tags.map(t=>`<span class="tag tag-${t}">${tagLabel(t)}</span>`).join('')}
+            </div>
+          </div>
+          <div class="quest-xp">+${Math.round(mission.xp/mission.quests.length)} XP</div>
+        </div>
+      `).join('')}
+    </div>
+    ${renderWidget(mission)}
+  `;
+
+  body.className = 'mission-body' + (isOpen ? ' open' : '');
+
+  // Update header status
+  const right = card.querySelector('.mission-right');
+  right.innerHTML = allDone
+    ? `<div class="completed-stamp">✓ CLEARED</div>`
+    : `<div class="xp-badge">+${mission.xp} XP</div><div class="progress-mini">${done}/${total} quests</div>`;
+
+  if (allDone) card.classList.add('completed');
+}
+
+function tagLabel(t) {
+  const map = { learn:'📖 เรียน', action:'⚡ ทำ', calc:'🧮 คำนวณ', think:'💭 คิด', btc:'₿ BTC', eth:'⟠ ETH', us:'🇺🇸 US Fund' };
+  return map[t] || t;
+}
+
+// Build all cards
+function buildAll() {
+  const container = document.getElementById('missionsContainer');
+  container.innerHTML = missions.map(m => `
+    <div class="mission-card ${m.cls}" data-mid="${m.id}">
+      <div class="mission-header" onclick="toggleMission(${m.id})" style="cursor:pointer">
+        <div class="mission-icon">${m.icon}</div>
+        <div class="mission-meta">
+          <div class="mission-num">MISSION ${m.id.toString().padStart(2,'0')}</div>
+          <div class="mission-title">${m.title}</div>
+          <div class="mission-sub">${m.sub}</div>
+        </div>
+        <div class="mission-right">
+          <div class="xp-badge">+${m.xp} XP</div>
+          <div class="progress-mini">0/${m.quests.length} quests</div>
+        </div>
+      </div>
+      <div class="mission-body"></div>
+    </div>
+  `).join('');
+
+  missions.forEach(m => renderCard(m.id));
+}
+
+// Calculators
+function calcNetIncome() {
+  const g = parseFloat(document.getElementById('w_gross')?.value)||0;
+  const f = parseFloat(document.getElementById('w_fixed')?.value)||0;
+  const el = document.getElementById('w_net');
+  if(el) el.textContent = (g-f).toLocaleString('th-TH') + ' ฿';
+}
+
+function calcBudget() {
+  const inc = parseFloat(document.getElementById('w_inc')?.value)||0;
+  const bars = document.getElementById('w_budget_bars');
+  if(!bars) return;
+  const items = [
+    { label:'จำเป็น (50%)', val: Math.round(inc*0.5), color:'#22C55E', pct:50 },
+    { label:'อยากได้ (30%)', val: Math.round(inc*0.3), color:'#38BDF8', pct:30 },
+    { label:'ออม/ลงทุน (20%)', val: Math.round(inc*0.2), color:'#F5C842', pct:20 }
+  ];
+  bars.innerHTML = items.map(i=>`
+    <div class="bb-row">
+      <div class="bb-label">${i.label}</div>
+      <div class="bb-track"><div class="bb-fill" style="width:${i.pct}%;background:${i.color}"></div></div>
+      <div class="bb-val" style="color:${i.color}">${i.val.toLocaleString('th-TH')} ฿</div>
+    </div>`).join('');
+}
+
+function calcEF() {
+  const mo = parseFloat(document.getElementById('w_monthly')?.value)||0;
+  const sv = parseFloat(document.getElementById('w_save_mo')?.value)||0;
+  const goal = mo * 3;
+  const months = sv > 0 ? Math.ceil(goal/sv) : 0;
+  const el = document.getElementById('w_ef_result');
+  if(el) el.textContent = goal.toLocaleString('th-TH') + ' ฿ · ' + (months||'—') + ' เดือน';
+}
+
+function calcDebt() {
+  const debt = parseFloat(document.getElementById('w_debt')?.value)||0;
+  const pay = parseFloat(document.getElementById('w_pay')?.value)||0;
+  const rate = 0.18/12;
+  let bal = debt, totalInt = 0, months = 0;
+  while (bal > 0 && months < 600) {
+    const int = bal * rate;
+    totalInt += int;
+    bal = bal + int - pay;
+    if (pay <= int) { months = 999; break; }
+    months++;
+  }
+  const el = document.getElementById('w_debt_result');
+  if(el) el.textContent = Math.round(totalInt).toLocaleString('th-TH') + ' ฿ · ' + (months >= 999 ? 'ไม่มีวันหมด!' : months + ' เดือน');
+}
+
+function calcSP500() {
+  const amt = parseFloat(document.getElementById('w_dca')?.value)||0;
+  const yrs = parseFloat(document.getElementById('w_yrs')?.value)||0;
+  const r = 0.10/12;
+  const n = yrs*12;
+  const total = n>0 ? Math.round(amt*((Math.pow(1+r,n)-1)/r)) : 0;
+  const invested = Math.round(amt*n);
+  const el = document.getElementById('w_sp_result');
+  if(el) el.textContent = total.toLocaleString('th-TH') + ' ฿';
+}
+
+function calcPortfolio() {
+  const total = parseFloat(document.getElementById('w_ptotal')?.value)||0;
+  const sp = parseFloat(document.getElementById('w_psp')?.value)||0;
+  const btc = parseFloat(document.getElementById('w_pbtc')?.value)||0;
+  const eth = parseFloat(document.getElementById('w_peth')?.value)||0;
+  const cash = Math.max(0, 100-sp-btc-eth);
+  const bars = document.getElementById('w_port_bars');
+  if(!bars) return;
+  const items = [
+    { label:`S&P 500 ETF (${sp}%)`, val: Math.round(total*sp/100), color:'#38BDF8', pct:sp },
+    { label:`BTC (${btc}%)`, val: Math.round(total*btc/100), color:'#FB923C', pct:btc },
+    { label:`ETH (${eth}%)`, val: Math.round(total*eth/100), color:'#C4B5FD', pct:eth },
+    { label:`Cash/EF (${cash}%)`, val: Math.round(total*cash/100), color:'#6B7280', pct:cash }
+  ];
+  bars.innerHTML = items.map(i=>`
+    <div class="bb-row">
+      <div class="bb-label" style="font-size:12px">${i.label}</div>
+      <div class="bb-track"><div class="bb-fill" style="width:${Math.min(i.pct,100)}%;background:${i.color}"></div></div>
+      <div class="bb-val" style="color:${i.color};font-size:12px">${i.val.toLocaleString('th-TH')} ฿</div>
+    </div>`).join('');
+}
+
+buildAll();
+updateXPBar();
+</script>
+</body>
+</html>
