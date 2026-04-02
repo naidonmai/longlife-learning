@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภารกิจ 7 ด่านเงินล้านวัย 18</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f14;
+    --bg2: #16161f;
+    --bg3: #1e1e2a;
+    --card: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0f0f5;
+    --text2: #9898b0;
+    --text3: #5a5a72;
+    --teal: #2de8a2;
+    --teal2: #1ab87e;
+    --teal-dim: rgba(45,232,162,0.12);
+    --purple: #9b7fff;
+    --purple-dim: rgba(155,127,255,0.12);
+    --amber: #ffb84d;
+    --amber-dim: rgba(255,184,77,0.12);
+    --coral: #ff7b6b;
+    --coral-dim: rgba(255,123,107,0.12);
+    --blue: #5bb8ff;
+    --blue-dim: rgba(91,184,255,0.12);
+    --pink: #ff8ec4;
+    --pink-dim: rgba(255,142,196,0.12);
+    --gold: #ffd700;
+    --gold-dim: rgba(255,215,0,0.12);
+    --r: 12px;
+    --r-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV ── */
+  .nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Mitr', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo-icon {
+    width: 28px; height: 28px;
+    background: var(--teal-dim);
+    border: 1px solid var(--teal);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .nav-stats {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .nav-stat {
+    text-align: right;
+  }
+  .nav-stat-val {
+    font-family: 'Mitr', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .nav-stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .nav-sep { width: 1px; height: 32px; background: var(--border); }
+
+  /* ── LAYOUT ── */
+  .app { display: flex; min-height: calc(100vh - 60px); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 8px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+  .sidebar-title:first-child { margin-top: 0; }
+
+  .level-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: background 0.15s;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+  }
+  .level-btn:hover:not(.locked) { background: var(--bg3); }
+  .level-btn.active { background: var(--bg3); }
+  .level-btn.locked { opacity: 0.4; cursor: not-allowed; }
+
+  .lb-icon {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    border: 1.5px solid transparent;
+  }
+  .lb-icon.done { border-color: var(--teal); background: var(--teal-dim); }
+  .lb-icon.active-icon { border-color: var(--purple); background: var(--purple-dim); }
+  .lb-icon.locked-icon { border-color: var(--border2); background: var(--bg3); }
+
+  .lb-info { flex: 1; min-width: 0; }
+  .lb-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lb-name.dim { color: var(--text2); }
+  .lb-meta { font-size: 11px; color: var(--text3); }
+
+  .lb-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    color: #000;
+    flex-shrink: 0;
+  }
+
+  /* XP bar in sidebar */
+  .xp-section {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .xp-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .xp-label span:last-child { color: var(--teal); font-weight: 500; }
+  .xp-track {
+    background: var(--bg3);
+    border-radius: 99px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .xp-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .rank-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: var(--teal-dim);
+    border-radius: var(--r-sm);
+    border: 1px solid rgba(45,232,162,0.2);
+  }
+  .rank-icon { font-size: 18px; }
+  .rank-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--teal);
+  }
+  .rank-sub { font-size: 11px; color: var(--teal2); }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    flex: 1;
+    padding: 32px;
+    max-width: 760px;
+    overflow-y: auto;
+  }
+
+  /* ── WELCOME SCREEN ── */
+  .welcome {
+    text-align: center;
+    padding: 48px 24px;
+    animation: fadeUp 0.4s ease;
+  }
+  .welcome-icon {
+    width: 80px; height: 80px;
+    background: var(--teal-dim);
+    border: 1.5px solid var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 24px;
+  }
+  .welcome h1 {
+    font-family: 'Mitr', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .welcome p {
+    color: var(--text2);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .start-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+  .start-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .start-card-icon { font-size: 24px; margin-bottom: 6px; }
+  .start-card-label { font-size: 12px; color: var(--text2); }
+  .start-card-val { font-size: 18px; font-weight: 600; color: var(--text); font-family: 'Mitr', sans-serif; }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--teal);
+    color: #000;
+    font-family: 'Mitr', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 28px;
+    border-radius: 99px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-start:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-start:active { transform: scale(0.98); }
+
+  /* ── LEVEL HEADER ── */
+  .level-header {
+    margin-bottom: 24px;
+    animation: fadeUp 0.3s ease;
+  }
+  .lh-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .lh-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .lh-title {
+    font-family: 'Mitr', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .lh-desc {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+  .lh-xp-box {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .lh-xp-num {
+    font-family: 'Mitr', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .lh-xp-label { font-size: 11px; color: var(--text3); }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--bg3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .progress-text { font-size: 12px; color: var(--text2); min-width: 60px; text-align: right; }
+
+  /* ── QUEST LIST ── */
+  .quest-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+  .quest-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .quest-item:hover { border-color: var(--border2); }
+  .quest-item.done { border-color: rgba(45,232,162,0.25); background: rgba(45,232,162,0.04); }
+
+  .q-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+    font-size: 11px;
+    color: transparent;
+  }
+  .quest-item.done .q-check {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #000;
+  }
+
+  .q-body { flex: 1; }
+  .q-text {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.5;
+    transition: color 0.15s;
+  }
+  .quest-item.done .q-text { color: var(--text3); text-decoration: line-through; }
+  .q-note {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+    padding: 6px 10px;
+    background: var(--bg3);
+    border-radius: var(--r-sm);
+    margin-top: 6px;
+    border-left: 2px solid var(--border2);
+  }
+  .q-xp {
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    padding: 3px 9px;
+    border-radius: 99px;
+    margin-top: 2px;
+  }
+
+  /* ── BOSS BOX ── */
+  .boss-box {
+    border: 1.5px dashed;
+    border-radius: var(--r);
+    padding: 16px;
+    margin-bottom: 16px;
+    animation: pulse-border 3s infinite;
+  }
+  .boss-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .boss-icon { font-size: 20px; }
+  .boss-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .boss-text { font-size: 14px; color: var(--text2); line-height: 1.5; }
+
+  /* ── REWARD BOX ── */
+  .reward-box {
+    border-radius: var(--r);
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .reward-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+  .reward-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--amber);
+    margin-bottom: 3px;
+  }
+  .reward-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+  /* ── CALC WIDGETS ── */
+  .calc-box {
+    background: var(--bg3);
+    border-radius: var(--r);
+    padding: 16px;
+    margin-top: 10px;
+    border: 1px solid var(--border);
+  }
+  .calc-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 12px; }
+  .calc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .calc-cell {
+    background: var(--bg2);
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+  .calc-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .calc-val { font-size: 18px; font-weight: 500; color: var(--text); font-family: 'Mitr', sans-serif; }
+  .calc-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--teal);
+    font-family: 'Mitr', sans-serif;
+  }
+  .calc-input::placeholder { color: var(--text3); }
+
+  /* ── BOTTOM NAV BUTTONS ── */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--bg3); color: var(--text); }
+  .btn.next {
+    background: var(--teal-dim);
+    border-color: var(--teal);
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .btn.next:hover { background: var(--teal); color: #000; }
+
+  /* ── WIN SCREEN ── */
+  .win-screen {
+    text-align: center;
+    padding: 48px 24px;
+    animation: fadeUp 0.5s ease;
+  }
+  .win-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite alternate;
+  }
+  .win-title {
+    font-family: 'Mitr', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .win-sub { font-size: 16px; color: var(--text2); margin-bottom: 32px; }
+  .win-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 420px;
+    margin: 0 auto 32px;
+  }
+  .win-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 12px;
+  }
+  .win-stat-val {
+    font-family: 'Mitr', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+  .win-stat-label { font-size: 11px; color: var(--text2); }
+
+  /* ── LOCKED SCREEN ── */
+  .locked-screen {
+    text-align: center;
+    padding: 80px 24px;
+    opacity: 0.6;
+  }
+  .locked-icon { font-size: 48px; margin-bottom: 16px; }
+  .locked-title { font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  .locked-sub { font-size: 14px; color: var(--text2); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+  @keyframes pulse-border {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  @keyframes xpPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  .xp-pop { animation: xpPop 0.3s ease; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    .main { padding: 20px 16px; }
+    .start-grid { grid-template-columns: repeat(3, 1fr); }
+    .win-stats { grid-template-columns: repeat(3, 1fr); }
+    .lh-top { flex-direction: column; }
+    .lh-xp-box { text-align: left; }
+    .nav-stats { gap: 12px; }
+    .calc-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">💰</div>
+    ภารกิจ 7 ด่านเงินล้านวัย 18
+  </div>
+  <div class="nav-stats">
+    <div class="nav-stat">
+      <div class="nav-stat-val" id="nav-xp">0</div>
+      <div class="nav-stat-label">XP</div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-stat">
+      <div class="nav-stat-val" id="nav-done">0/7</div>
+      <div class="nav-stat-label">ด่าน</div>
+    </div>
+  </div>
+</nav>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">แผนที่ด่าน</div>
+    <div id="sidebar-levels"></div>
+
+    <div class="xp-section">
+      <div class="xp-label">
+        <span>ความก้าวหน้า</span>
+        <span id="xp-pct">0%</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+      <div class="rank-badge" id="rank-badge">
+        <div class="rank-icon" id="rank-icon">🌱</div>
+        <div>
+          <div class="rank-name" id="rank-name">นักเดินทาง</div>
+          <div class="rank-sub" id="rank-sub">เริ่มต้นการเดินทาง</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="main-content">
+    <!-- content rendered by JS -->
+  </main>
+
+</div>
+
+<script>
+const LEVELS = [
+  {
+    id: 0,
+    title: "ด่าน 1 · รู้จักเงินของตัวเอง",
+    theme: "EARN",
+    color: "var(--teal)",
+    colorDim: "var(--teal-dim)",
+    icon: "💼",
+    desc: "เข้าใจรายได้จริงของตัวเอง — ภาษี สวัสดิการ และเงินสุทธิที่จะได้รับจริงๆ",
+    xpTotal: 80,
+    reward: "ปลดล็อก: แผนที่รายจ่ายส่วนตัว",
+    boss: "สมมติเงินเดือน 20,000 บาท คำนวณรายได้สุทธิหลังหัก ปกส. และภาษีได้ถูกต้อง",
+    quests: [
+      { text: "เขียนรายได้ทุกทางที่ได้รับในปัจจุบัน", xp: 15, note: "เงินค่าขนม / งาน part-time / รายได้อื่นๆ นับทุกบาท ไม่มีจำนวนน้อยเกินไป" },
+      { text: "ค้นหาว่าประกันสังคม (ปกส.) คืออะไร และหักเท่าไหร่", xp: 15, note: "→ 5% ของเงินเดือน สูงสุดไม่เกิน 750 บาท/เดือน ครอบคลุมค่ารักษาพยาบาล" },
+      { text: "คำนวณ: เงินเดือน 20,000 บาท → รายได้สุทธิเท่าไหร่?", xp: 20, note: "→ หัก ปกส. 1,000 บาท = เหลือ 19,000 บาท (ยังไม่เสียภาษีเพราะต่ำกว่าเกณฑ์)", hasCalc: "earn" },
+      { text: "ค้นหาสวัสดิการ 3 อย่างที่บริษัทดีๆ มักให้", xp: 15, note: "เช่น กองทุนสำรองเลี้ยงชีพ / ประกันกลุ่ม / วันลาพักร้อน — สวัสดิการ = เงินที่ซ่อนอยู่" },
+      { text: "BOSS: เขียน 'รายได้สุทธิจริง' ของตัวเองลงบนกระดาษ", xp: 15, note: "ถ้ายังเรียน = นับเงินค่าขนมที่ได้รับต่อเดือน แล้วลองคิดดูว่าพอไหม?" }
+    ]
+  },
+  {
+    id: 1,
+    title: "ด่าน 2 · สร้างแผนที่รายจ่าย",
+    theme: "SPEND",
+    color: "var(--purple)",
+    colorDim: "var(--purple-dim)",
+    icon: "🗺️",
+    desc: "Track ทุกบาทที่ใช้ 7 วัน แล้วสร้างงบประมาณ 50-30-20 ของตัวเอง",
+    xpTotal: 90,
+    reward: "ปลดล็อก: งบประมาณ 50-30-20 ส่วนตัว",
+    boss: "กรอก Budget Sheet 50-30-20 ของตัวเองให้ครบทุกช่อง พร้อมระบุรายการจริง",
+    quests: [
+      { text: "ดาวน์โหลด app จดรายจ่าย หรือตั้ง Note บนโทรศัพท์", xp: 10, note: "แนะนำ: Money Lover / Spendee / หรือแค่ Notes ธรรมดาก็ได้ อย่าให้ความสมบูรณ์แบบขวางการเริ่ม" },
+      { text: "บันทึกรายจ่ายทุกวัน ติดต่อกัน 7 วัน ไม่ขาด", xp: 25, note: "จด: วันที่ / จำนวน / หมวด (อาหาร / เดินทาง / บันเทิง / อื่นๆ) — ไม่ตัดสิน แค่สังเกต" },
+      { text: "นับยอดรวมแต่ละหมวด แล้วเปรียบกับรายได้", xp: 20, note: "หมวดไหนเกิน 50% ของรายได้ = ต้องจัดการก่อน" },
+      { text: "ระบุ 2 รายการที่ตัดได้ทันทีโดยไม่กระทบความสุข", xp: 20, note: "เช่น subscription ที่ไม่ได้ใช้ / ชาไข่มุกวันเว้นวัน / ค่า delivery เมื่อทำเองได้", hasCalc: "budget" },
+      { text: "BOSS: กรอก Budget 50-30-20 ของตัวเองให้ครบ", xp: 15, note: "จำเป็น 50% / ต้องการ 30% / ออม 20% — ถ้าออมได้มากกว่า 20% ยิ่งดี" }
+    ]
+  },
+  {
+    id: 2,
+    title: "ด่าน 3 · เปิดคลังออม",
+    theme: "SAVE",
+    color: "var(--amber)",
+    colorDim: "var(--amber-dim)",
+    icon: "🏦",
+    desc: "Pay Yourself First — ออมก่อนใช้ อัตโนมัติ สร้าง Emergency Fund",
+    xpTotal: 100,
+    reward: "ปลดล็อก: แผนออม Emergency Fund พร้อม Timeline",
+    boss: "ตั้ง Auto Transfer เงินเข้าบัญชีออมทรัพย์แยก สำเร็จครั้งแรก",
+    quests: [
+      { text: "เปิดบัญชีออมทรัพย์แยกจากบัญชีหลัก", xp: 20, note: "แนะนำ: TTB All Free / KBank Smart Savings / SCB Easy Savings — บัญชีแยก = กำแพงจิตใจที่ดีที่สุด" },
+      { text: "คำนวณ Emergency Fund เป้าหมาย (ค่าใช้จ่าย × 3 เดือน)", xp: 20, note: "เช่น ใช้เดือนละ 6,000 บาท → ต้องการ 18,000 บาทสำรอง", hasCalc: "emf" },
+      { text: "วางแผนว่าจะออมเดือนละเท่าไหร่ เพื่อถึงเป้าในกี่เดือน", xp: 20, note: "ตัวอย่าง: ออม 1,500 บาท/เดือน → ถึงเป้า 18,000 บาทใน 12 เดือน" },
+      { text: "BOSS: ตั้ง Auto Transfer เงินออมวันที่รับเงิน (ก่อนใช้)", xp: 40, note: "แม้แต่ 200 บาท = ชัยชนะ / หลักการ: Pay Yourself First — ออมก่อนเสมอ" }
+    ]
+  },
+  {
+    id: 3,
+    title: "ด่าน 4 · เกราะป้องกัน",
+    theme: "PROTECT",
+    color: "var(--coral)",
+    colorDim: "var(--coral-dim)",
+    icon: "🛡️",
+    desc: "ประกันพื้นฐาน + ระวังสแกม + จัดการเอกสารสำคัญ",
+    xpTotal: 90,
+    reward: "ปลดล็อก: Checklist ความปลอดภัยทางการเงิน",
+    boss: "อธิบายสัญญาณสแกม 3 ข้อ ให้เพื่อนหรือพ่อแม่ฟัง 1 คน",
+    quests: [
+      { text: "ตรวจสอบว่าตัวเองมีประกันสุขภาพอะไรบ้างอยู่แล้ว", xp: 15, note: "ถ้าอยู่ใต้ความคุ้มครองพ่อแม่ → รู้วันหมดอายุ และจะเกิดอะไรขึ้นเมื่ออายุ 20 ปี" },
+      { text: "เรียนรู้ความต่าง: ประกันสังคม / ประกันสุขภาพ / ประกันชีวิต", xp: 20, note: "ลำดับความสำคัญ: ประกันสุขภาพก่อนเสมอ ชีวิตมาทีหลัง" },
+      { text: "จำสัญญาณสแกม 3 ข้อให้แม่น", xp: 20, note: "🚩 ผลตอบแทนสูงผิดปกติ (เกิน 5%/เดือน)  🚩 กดดันให้ตัดสินใจเร็ว  🚩 ต้องชวนคนอื่นเพื่อรับเงิน" },
+      { text: "สร้าง Folder เอกสารสำคัญดิจิทัล", xp: 15, note: "ใส่: สำเนาบัตร ปชช. / สมุดบัญชี / กรมธรรม์ / บันทึกไว้ใน Google Drive หรือ iCloud ที่ล็อกรหัส" },
+      { text: "BOSS: สอนสัญญาณสแกมให้คนอื่น 1 คน", xp: 20, note: "สอนได้ = เข้าใจจริง / คนรอบข้างปลอดภัย = ความสำเร็จที่แท้จริง" }
+    ]
+  },
+  {
+    id: 4,
+    title: "ด่าน 5 · ถอดรหัสหนี้",
+    theme: "BORROW",
+    color: "var(--blue)",
+    colorDim: "var(--blue-dim)",
+    icon: "💳",
+    desc: "เข้าใจดอกเบี้ย APR และกับดักบัตรเครดิต ก่อนมีบัตรใบแรก",
+    xpTotal: 100,
+    reward: "ปลดล็อก: กฎบัตรเครดิตใบแรกของตัวเอง",
+    boss: "คำนวณได้ว่าถ้าจ่ายแค่ขั้นต่ำ จะเสียดอกเบี้ยรวมเท่าไหร่และใช้เวลากี่ปี",
+    quests: [
+      { text: "เรียนรู้ว่า APR คืออะไร ต่างจากดอกเบี้ยปกติอย่างไร", xp: 15, note: "APR = Annual Percentage Rate = ต้นทุนรวมต่อปี รวมค่าธรรมเนียมทุกอย่างแล้ว" },
+      { text: "คำนวณ: หนี้ 10,000 บาท ดอกเบี้ย 20%/ปี จ่ายขั้นต่ำ → เสียดอกเบี้ยรวมเท่าไหร่?", xp: 25, note: "ลองกรอกตัวเลขด้านล่างดู ผลลัพธ์จะช็อคคุณ", hasCalc: "debt" },
+      { text: "เปรียบเทียบดอกเบี้ย: บัตรเครดิต vs สินเชื่อส่วนบุคคล vs กู้ยืมจากพ่อแม่", xp: 20, note: "บัตรเครดิต 18-28%/ปี / สินเชื่อส่วนบุคคล 15-25%/ปี / ยืมพ่อแม่ 0% แต่มีต้นทุนทางใจ" },
+      { text: "เขียนกฎ 3 ข้อส่วนตัวสำหรับบัตรเครดิตใบแรก", xp: 20, note: "เช่น: (1) รูดเฉพาะสิ่งที่มีเงินอยู่แล้ว  (2) ชำระเต็มจำนวนทุกเดือน  (3) วงเงินไม่เกิน 50% ของรายได้" },
+      { text: "BOSS: อธิบายให้ได้ว่าทำไมจ่ายขั้นต่ำถึงน่ากลัว ด้วยตัวเลขจริง", xp: 20, note: "อธิบายด้วยตัวเลขจริง ไม่ใช่แค่บอกว่า 'ไม่ดี' — การรู้ตัวเลขทำให้ตัดสินใจได้ดีขึ้น" }
+    ]
+  },
+  {
+    id: 5,
+    title: "ด่าน 6 · เงินทำงานแทน",
+    theme: "INVEST",
+    color: "var(--pink)",
+    colorDim: "var(--pink-dim)",
+    icon: "📈",
+    desc: "เข้าใจ Compound Interest และเริ่มลงทุนครั้งแรกในชีวิต",
+    xpTotal: 110,
+    reward: "ปลดล็อก: แผนลงทุนระยะยาว 10 ปีส่วนตัว",
+    boss: "เปิดบัญชีกองทุนรวมหรือหุ้นสำเร็จ แม้ลงทุนครั้งแรกเพียง 100 บาท",
+    quests: [
+      { text: "เรียนรู้ Compound Interest ด้วยกฎ 72", xp: 20, note: "กฎ 72: หาร 72 ด้วยอัตราผลตอบแทน = ปีที่เงินเพิ่มเป็น 2 เท่า  เช่น 8%/ปี → เงิน 2 เท่าใน 9 ปี", hasCalc: "compound" },
+      { text: "เปรียบเทียบ: ฝากธนาคาร vs กองทุนตลาดเงิน vs กองทุนหุ้น", xp: 20, note: "ธนาคาร 1-2%/ปี / ตลาดเงิน 2-4%/ปี / หุ้น 7-10%/ปี (เสี่ยงมากขึ้น = ผลตอบแทนคาดหวังมากขึ้น)" },
+      { text: "ศึกษา SSF / RMF / กองทุนรวมทั่วไป ต่างกันอย่างไร", xp: 20, note: "SSF/RMF = ลดภาษีได้ เหมาะเมื่อมีรายได้เกินเกณฑ์ / กองทุนทั่วไป = ยืดหยุ่นกว่า ถอนได้เร็วกว่า" },
+      { text: "คำนวณ: ออม 1,000 บาท/เดือน ผลตอบแทน 8%/ปี จะมีเท่าไหร่ใน 10 ปี?", xp: 25, note: "เฉลย: ≈ 184,000 บาท (ลงทุนเองแค่ 120,000 บาท) — ส่วนต่าง 64,000 บาทคือ Compound ทำงาน" },
+      { text: "BOSS: เปิดบัญชีกองทุน/หุ้นครั้งแรก (แม้แค่ 100 บาท)", xp: 25, note: "แนะนำ: Finnomena / Kasikorn AM / MFC / หรือ SET Easy Invest — การเริ่มสำคัญกว่าจำนวนเงิน" }
+    ]
+  },
+  {
+    id: 6,
+    title: "ด่าน 7 · FINAL BOSS",
+    theme: "MASTER",
+    color: "var(--gold)",
+    colorDim: "var(--gold-dim)",
+    icon: "👑",
+    desc: "รวมทุกทักษะ — สร้างแผนการเงิน 3 ปีของตัวเองให้สมบูรณ์",
+    xpTotal: 130,
+    reward: "Master Badge: นักบริหารเงินวัย 18 — ปลดล็อกสมบูรณ์",
+    boss: "FINAL BOSS: นำเสนอแผนการเงิน 3 ปีให้พ่อหรือแม่ฟัง อธิบายได้ครบทุกมิติ",
+    quests: [
+      { text: "สรุป 5 สิ่งที่เปลี่ยนไปในการมองเงิน หลังผ่าน 6 ด่านแรก", xp: 20, note: "เขียนจากใจ ไม่ต้องสวย — การเปลี่ยนมุมมองคือสิ่งที่มีค่าที่สุดจากการเรียนรู้นี้" },
+      { text: "ตั้งเป้าหมายการเงิน 1 ปีข้างหน้า ด้วยตัวเลขชัดเจน", xp: 25, note: "ตัวอย่าง: 'ออม Emergency Fund 18,000 บาท ภายใน 12 เดือน โดยออมเดือนละ 1,500 บาท'" },
+      { text: "วางแผนรายได้เพิ่ม (งาน part-time / ทักษะใหม่ / ธุรกิจเล็ก)", xp: 25, note: "Earn มากขึ้น = ทางลัดที่ดีที่สุด — อย่าแค่ประหยัด แต่ต้องหาเพิ่มด้วย" },
+      { text: "เขียนกฎเงินส่วนตัว 3 ข้อที่จะรักษาตลอดชีวิต", xp: 25, note: "กฎที่มาจากประสบการณ์จริงของตัวเอง จะจำได้นานกว่ากฎที่คนอื่นบอก" },
+      { text: "FINAL BOSS: นำเสนอแผน 3 ปีให้พ่อหรือแม่ฟัง", xp: 35, note: "อธิบายได้ = เข้าใจจริง / พ่อแม่รับรู้ = มีคนช่วยกำกับ — นี่คือชัยชนะที่แท้จริง" }
+    ]
+  }
+];
+
+const RANKS = [
+  { name: "นักเดินทาง", icon: "🌱", sub: "เริ่มต้นการเดินทาง" },
+  { name: "นักสำรวจ", icon: "🔍", sub: "กำลังค้นหาตัวเอง" },
+  { name: "นักวางแผน", icon: "📋", sub: "มีระบบในชีวิต" },
+  { name: "นักออม", icon: "🏦", sub: "สร้างฐานมั่นคง" },
+  { name: "นักลงทุน", icon: "📈", sub: "เงินทำงานแทนแล้ว" },
+  { name: "ผู้เชี่ยวชาญ", icon: "⭐", sub: "เกือบถึงจุดสูงสุด" },
+  { name: "Master", icon: "👑", sub: "เชี่ยวชาญครบทุกด้าน" }
+];
+
+// ─── STATE ───
+let state = {
+  currentView: "welcome", // welcome | level | win
+  openLevel: 0,
+  doneQuests: JSON.parse(localStorage.getItem("mq_done") || "{}"),
+  calcValues: JSON.parse(localStorage.getItem("mq_calc") || "{}")
+};
+
+function saveState() {
+  localStorage.setItem("mq_done", JSON.stringify(state.doneQuests));
+  localStorage.setItem("mq_calc", JSON.stringify(state.calcValues));
+}
+
+function totalXP() {
+  let xp = 0;
+  Object.keys(state.doneQuests).forEach(k => {
+    const [li, qi] = k.split("-").map(Number);
+    if (LEVELS[li] && LEVELS[li].quests[qi]) xp += LEVELS[li].quests[qi].xp;
+  });
+  return xp;
+}
+
+function levelsDone() {
+  return LEVELS.filter((_, i) => isLevelDone(i)).length;
+}
+
+function isLevelDone(li) {
+  return LEVELS[li].quests.every((_, qi) => state.doneQuests[li + "-" + qi]);
+}
+
+function isLevelUnlocked(li) {
+  if (li === 0) return true;
+  return isLevelDone(li - 1);
+}
+
+// ─── HUD ───
+function updateHUD() {
+  const xp = totalXP();
+  const done = levelsDone();
+  const pct = Math.min(Math.round(xp / 700 * 100), 100);
+  const rank = RANKS[Math.min(done, 6)];
+
+  document.getElementById("nav-xp").textContent = xp;
+  document.getElementById("nav-done").textContent = done + "/7";
+  document.getElementById("xp-fill").style.width = pct + "%";
+  document.getElementById("xp-pct").textContent = pct + "%";
+  document.getElementById("rank-icon").textContent = rank.icon;
+  document.getElementById("rank-name").textContent = rank.name;
+  document.getElementById("rank-sub").textContent = rank.sub;
+}
+
+// ─── SIDEBAR ───
+function renderSidebar() {
+  const el = document.getElementById("sidebar-levels");
+  el.innerHTML = "";
+  LEVELS.forEach((lv, i) => {
+    const done = isLevelDone(i);
+    const unlocked = isLevelUnlocked(i);
+    const active = state.openLevel === i && state.currentView === "level";
+    const iconCls = done ? "done" : active ? "active-icon" : "locked-icon";
+    const nameCls = unlocked ? "" : "dim";
+    const xpDone = lv.quests.reduce((a, q, qi) => a + (state.doneQuests[i + "-" + qi] ? q.xp : 0), 0);
+
+    const btn = document.createElement("button");
+    btn.className = "level-btn" + (active ? " active" : "") + (!unlocked ? " locked" : "");
+    btn.innerHTML = `
+      <div class="lb-icon ${iconCls}">${done ? "✓" : lv.icon}</div>
+      <div class="lb-info">
+        <div class="lb-name ${nameCls}">${lv.title}</div>
+        <div class="lb-meta">${done ? "ผ่านแล้ว" : unlocked ? xpDone + "/" + lv.xpTotal + " XP" : "🔒 ยังล็อก"}</div>
+      </div>
+      ${done ? `<div class="lb-check">✓</div>` : ""}
+    `;
+    if (unlocked) btn.onclick = () => openLevel(i);
+    el.appendChild(btn);
+  });
+}
+
+// ─── VIEWS ───
+function showWelcome() {
+  state.currentView = "welcome";
+  renderSidebar();
+  const done = levelsDone();
+  const xp = totalXP();
+  document.getElementById("main-content").innerHTML = `
+    <div class="welcome">
+      <div class="welcome-icon">💰</div>
+      <h1>ภารกิจ 7 ด่านเงินล้านวัย 18</h1>
+      <p>หลักสูตรการเงินที่ออกแบบมาให้ทำได้จริง ทีละขั้น — จาก Earn ถึง Invest ในเวลา 7 สัปดาห์</p>
+      <div class="start-grid">
+        <div class="start-card">
+          <div class="start-card-icon">⚔️</div>
+          <div class="start-card-val">7</div>
+          <div class="start-card-label">ด่านทั้งหมด</div>
+        </div>
+        <div class="start-card">
+          <div class="start-card-icon">⭐</div>
+          <div class="start-card-val">700</div>
+          <div class="start-card-label">XP สูงสุด</div>
+        </div>
+        <div class="start-card">
+          <div class="start-card-icon">📅</div>
+          <div class="start-card-val">7</div>
+          <div class="start-card-label">สัปดาห์</div>
+        </div>
+      </div>
+      ${done > 0 ? `<p style="color:var(--teal);font-size:14px;margin-bottom:16px;">ความก้าวหน้า: ผ่านแล้ว ${done} ด่าน · ${xp} XP</p>` : ""}
+      <button class="btn-start" onclick="openLevel(${done < 7 ? Math.min(done, 6) : 0})">
+        ${done === 0 ? "เริ่มด่านแรก" : done < 7 ? "เล่นต่อจากด่านที่ค้างไว้" : "ดูสรุปทั้งหมด"} →
+      </button>
+    </div>`;
+}
+
+function openLevel(i) {
+  if (!isLevelUnlocked(i)) return;
+  state.currentView = "level";
+  state.openLevel = i;
+  renderSidebar();
+  renderLevelView();
+}
+
+function renderLevelView() {
+  const i = state.openLevel;
+  const lv = LEVELS[i];
+  const done = isLevelDone(i);
+  const xpDone = lv.quests.reduce((a, q, qi) => a + (state.doneQuests[i + "-" + qi] ? q.xp : 0), 0);
+  const pct = Math.round(xpDone / lv.xpTotal * 100);
+
+  let questsHTML = lv.quests.map((q, qi) => {
+    const key = i + "-" + qi;
+    const isDone = !!state.doneQuests[key];
+    let calcHTML = "";
+    if (q.hasCalc) calcHTML = renderCalc(q.hasCalc, i, qi);
+    return `
+      <div class="quest-item ${isDone ? "done" : ""}" id="qi-${i}-${qi}" onclick="toggleQuest(${i},${qi})">
+        <div class="q-check">${isDone ? "✓" : ""}</div>
+        <div class="q-body">
+          <div class="q-text">${q.text}</div>
+          ${q.note ? `<div class="q-note" onclick="event.stopPropagation()">${q.note}</div>` : ""}
+          ${calcHTML ? `<div onclick="event.stopPropagation()">${calcHTML}</div>` : ""}
+        </div>
+        <div class="q-xp" style="background:${lv.colorDim};color:${lv.color}">+${q.xp} XP</div>
+      </div>`;
+  }).join("");
+
+  document.getElementById("main-content").innerHTML = `
+    <div class="level-header">
+      <div class="lh-top">
+        <div>
+          <div class="lh-badge" style="background:${lv.colorDim};color:${lv.color}">${lv.icon} ${lv.theme}</div>
+          <div class="lh-title">${lv.title}</div>
+          <div class="lh-desc">${lv.desc}</div>
+        </div>
+        <div class="lh-xp-box">
+          <div class="lh-xp-num" style="color:${lv.color}" id="lh-xp-num">${xpDone}</div>
+          <div class="lh-xp-label">/ ${lv.xpTotal} XP</div>
+        </div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-track">
+          <div class="progress-fill" id="prog-fill" style="width:${pct}%;background:${lv.color}"></div>
+        </div>
+        <div class="progress-text" id="prog-text">${xpDone}/${lv.xpTotal} XP</div>
+      </div>
+    </div>
+
+    <div class="quest-list">${questsHTML}</div>
+
+    <div class="boss-box" style="border-color:${lv.color};background:${lv.colorDim}">
+      <div class="boss-head">
+        <div class="boss-icon">⚔️</div>
+        <div class="boss-label" style="color:${lv.color}">Boss ประจำด่าน</div>
+      </div>
+      <div class="boss-text">${lv.boss}</div>
+    </div>
+
+    ${done ? `
+    <div class="reward-box" style="background:${lv.colorDim};border:1px solid ${lv.color}40">
+      <div class="reward-icon">🎁</div>
+      <div>
+        <div class="reward-title">รางวัลที่ปลดล็อก!</div>
+        <div class="reward-desc">${lv.reward}</div>
+      </div>
+    </div>` : ""}
+
+    <div class="btn-row">
+      ${i > 0 ? `<button class="btn" onclick="openLevel(${i-1})">← ด่านก่อน</button>` : ""}
+      <button class="btn" onclick="showWelcome()">🏠 หน้าแรก</button>
+      ${done && i < 6 ? `<button class="btn next" onclick="openLevel(${i+1})">ด่านต่อไป →</button>` : ""}
+      ${done && i === 6 ? `<button class="btn next" onclick="showWin()">ดูสรุปชัยชนะ 🎉</button>` : ""}
+    </div>`;
+
+  initCalcs();
+}
+
+// ─── CALCULATORS ───
+function renderCalc(type, li, qi) {
+  const key = `calc_${type}_${li}_${qi}`;
+  if (type === "earn") {
+    return `<div class="calc-box">
+      <div class="calc-title">🧮 ลองคำนวณดู</div>
+      <div class="calc-grid">
+        <div class="calc-cell"><div class="calc-label">เงินเดือน (บาท)</div><input class="calc-input" id="earn-salary" type="number" placeholder="20000" oninput="calcEarn()"/></div>
+        <div class="calc-cell"><div class="calc-label">หัก ปกส. 5%</div><div class="calc-val" id="earn-sso">—</div></div>
+        <div class="calc-cell"><div class="calc-label">ภาษี (โดยประมาณ)</div><div class="calc-val" id="earn-tax">—</div></div>
+        <div class="calc-cell"><div class="calc-label">รายได้สุทธิ</div><div class="calc-val" id="earn-net" style="color:var(--teal)">—</div></div>
+      </div>
+    </div>`;
+  }
+  if (type === "budget") {
+    return `<div class="calc-box">
+      <div class="calc-title">🧮 งบประมาณ 50-30-20</div>
+      <div class="calc-grid">
+        <div class="calc-cell"><div class="calc-label">รายได้/เดือน (บาท)</div><input class="calc-input" id="bud-income" type="number" placeholder="15000" oninput="calcBudget()"/></div>
+        <div class="calc-cell"><div class="calc-label">จำเป็น 50%</div><div class="calc-val" id="bud-50">—</div></div>
+        <div class="calc-cell"><div class="calc-label">ต้องการ 30%</div><div class="calc-val" id="bud-30">—</div></div>
+        <div class="calc-cell"><div class="calc-label">ออม 20%</div><div class="calc-val" id="bud-20" style="color:var(--teal)">—</div></div>
+      </div>
+    </div>`;
+  }
+  if (type === "emf") {
+    return `<div class="calc-box">
+      <div class="calc-title">🧮 คำนวณ Emergency Fund</div>
+      <div class="calc-grid">
+        <div class="calc-cell"><div class="calc-label">ค่าใช้จ่าย/เดือน (บาท)</div><input class="calc-input" id="emf-exp" type="number" placeholder="6000" oninput="calcEmf()"/></div>
+        <div class="calc-cell"><div class="calc-label">เป้าหมาย (3 เดือน)</div><div class="calc-val" id="emf-goal" style="color:var(--amber)">—</div></div>
+        <div class="calc-cell"><div class="calc-label">ออมเดือนละ (บาท)</div><input class="calc-input" id="emf-monthly" type="number" placeholder="1500" oninput="calcEmf()"/></div>
+        <div class="calc-cell"><div class="calc-label">ถึงเป้าใน</div><div class="calc-val" id="emf-months" style="color:var(--teal)">—</div></div>
+      </div>
+    </div>`;
+  }
+  if (type === "debt") {
+    return `<div class="calc-box">
+      <div class="calc-title">🧮 กับดักจ่ายขั้นต่ำ</div>
+      <div class="calc-grid">
+        <div class="calc-cell"><div class="calc-label">ยอดหนี้ (บาท)</div><input class="calc-input" id="dbt-amount" type="number" placeholder="10000" oninput="calcDebt()"/></div>
+        <div class="calc-cell"><div class="calc-label">ดอกเบี้ย/ปี (%)</div><input class="calc-input" id="dbt-rate" type="number" placeholder="20" oninput="calcDebt()"/></div>
+        <div class="calc-cell"><div class="calc-label">ดอกเบี้ยรวมที่เสีย</div><div class="calc-val" id="dbt-int" style="color:var(--coral)">—</div></div>
+        <div class="calc-cell"><div class="calc-label">เวลาที่ใช้</div><div class="calc-val" id="dbt-time" style="color:var(--coral)">—</div></div>
+      </div>
+    </div>`;
+  }
+  if (type === "compound") {
+    return `<div class="calc-box">
+      <div class="calc-title">🧮 กฎ 72 — พลังทบต้น</div>
+      <div class="calc-grid">
+        <div class="calc-cell"><div class="calc-label">เงินลงทุนตั้งต้น (บาท)</div><input class="calc-input" id="cmp-principal" type="number" placeholder="10000" oninput="calcCompound()"/></div>
+        <div class="calc-cell"><div class="calc-label">ผลตอบแทน/ปี (%)</div><input class="calc-input" id="cmp-rate" type="number" placeholder="8" oninput="calcCompound()"/></div>
+        <div class="calc-cell"><div class="calc-label">มูลค่าใน 10 ปี</div><div class="calc-val" id="cmp-val" style="color:var(--pink)">—</div></div>
+        <div class="calc-cell"><div class="calc-label">เงินเพิ่ม 2× ใน</div><div class="calc-val" id="cmp-double" style="color:var(--teal)">—</div></div>
+      </div>
+    </div>`;
+  }
+  return "";
+}
+
+function initCalcs() {
+  calcDebt();
+}
+
+function calcEarn() {
+  const sal = parseFloat(document.getElementById("earn-salary")?.value) || 0;
+  if (!sal) return;
+  const sso = Math.min(sal * 0.05, 750);
+  const taxable = sal * 12 - 60000 - sso * 12 - 100000;
+  const taxAnnual = taxable > 0 ? taxable * 0.05 : 0;
+  const taxMonthly = taxAnnual / 12;
+  const net = sal - sso - taxMonthly;
+  document.getElementById("earn-sso").textContent = Math.round(sso).toLocaleString("th-TH") + "฿";
+  document.getElementById("earn-tax").textContent = Math.round(taxMonthly).toLocaleString("th-TH") + "฿";
+  document.getElementById("earn-net").textContent = Math.round(net).toLocaleString("th-TH") + "฿";
+}
+
+function calcBudget() {
+  const v = parseFloat(document.getElementById("bud-income")?.value) || 0;
+  document.getElementById("bud-50").textContent = v ? Math.round(v * 0.5).toLocaleString("th-TH") + "฿" : "—";
+  document.getElementById("bud-30").textContent = v ? Math.round(v * 0.3).toLocaleString("th-TH") + "฿" : "—";
+  document.getElementById("bud-20").textContent = v ? Math.round(v * 0.2).toLocaleString("th-TH") + "฿" : "—";
+}
+
+function calcEmf() {
+  const exp = parseFloat(document.getElementById("emf-exp")?.value) || 0;
+  const monthly = parseFloat(document.getElementById("emf-monthly")?.value) || 0;
+  const goal = exp * 3;
+  document.getElementById("emf-goal").textContent = goal ? Math.round(goal).toLocaleString("th-TH") + "฿" : "—";
+  if (goal && monthly) {
+    const months = Math.ceil(goal / monthly);
+    document.getElementById("emf-months").textContent = months + " เดือน";
+  } else {
+    document.getElementById("emf-months").textContent = "—";
+  }
+}
+
+function calcDebt() {
+  const D = parseFloat(document.getElementById("dbt-amount")?.value) || 10000;
+  const rate = parseFloat(document.getElementById("dbt-rate")?.value) || 20;
+  const r = rate / 100 / 12;
+  let bal = D, totalPaid = 0, months = 0;
+  while (bal > 1 && months < 600) {
+    const interest = bal * r;
+    const payment = Math.max(bal * 0.1, 100);
+    totalPaid += payment;
+    bal = bal + interest - payment;
+    months++;
+  }
+  const totalInt = totalPaid - D;
+  if (document.getElementById("dbt-int")) {
+    document.getElementById("dbt-int").textContent = Math.round(totalInt).toLocaleString("th-TH") + "฿";
+    document.getElementById("dbt-time").textContent = months < 600 ? (Math.round(months / 12 * 10) / 10) + " ปี" : ">50 ปี";
+  }
+}
+
+function calcCompound() {
+  const p = parseFloat(document.getElementById("cmp-principal")?.value) || 0;
+  const r = parseFloat(document.getElementById("cmp-rate")?.value) || 0;
+  if (!p || !r) return;
+  const val = p * Math.pow(1 + r / 100, 10);
+  const doubleYears = (72 / r).toFixed(1);
+  document.getElementById("cmp-val").textContent = Math.round(val).toLocaleString("th-TH") + "฿";
+  document.getElementById("cmp-double").textContent = doubleYears + " ปี";
+}
+
+// ─── TOGGLE QUEST ───
+function toggleQuest(li, qi) {
+  const key = li + "-" + qi;
+  if (state.doneQuests[key]) delete state.doneQuests[key];
+  else state.doneQuests[key] = true;
+  saveState();
+  updateHUD();
+  renderSidebar();
+
+  const el = document.getElementById(`qi-${li}-${qi}`);
+  if (el) {
+    const isDone = !!state.doneQuests[key];
+    el.classList.toggle("done", isDone);
+    const chk = el.querySelector(".q-check");
+    if (chk) chk.textContent = isDone ? "✓" : "";
+    const txt = el.querySelector(".q-text");
+    if (txt) txt.classList.toggle("done", isDone);
+  }
+
+  const xpDone = LEVELS[li].quests.reduce((a, q, qi2) => a + (state.doneQuests[li + "-" + qi2] ? q.xp : 0), 0);
+  const pct = Math.round(xpDone / LEVELS[li].xpTotal * 100);
+  const pf = document.getElementById("prog-fill");
+  const pt = document.getElementById("prog-text");
+  const xn = document.getElementById("lh-xp-num");
+  if (pf) pf.style.width = pct + "%";
+  if (pt) pt.textContent = xpDone + "/" + LEVELS[li].xpTotal + " XP";
+  if (xn) { xn.textContent = xpDone; xn.classList.remove("xp-pop"); void xn.offsetWidth; xn.classList.add("xp-pop"); }
+
+  if (isLevelDone(li)) {
+    setTimeout(() => renderLevelView(), 300);
+  }
+}
+
+// ─── WIN ───
+function showWin() {
+  state.currentView = "win";
+  renderSidebar();
+  const xp = totalXP();
+  document.getElementById("main-content").innerHTML = `
+    <div class="win-screen">
+      <div class="win-icon">👑</div>
+      <div class="win-title">ยินดีด้วย!</div>
+      <div class="win-sub">คุณผ่านครบ 7 ด่านแล้ว — Master Badge: นักบริหารเงินวัย 18</div>
+      <div class="win-stats">
+        <div class="win-stat"><div class="win-stat-val">700</div><div class="win-stat-label">XP รวม</div></div>
+        <div class="win-stat"><div class="win-stat-val">7</div><div class="win-stat-label">ด่านผ่าน</div></div>
+        <div class="win-stat"><div class="win-stat-val">👑</div><div class="win-stat-label">Master</div></div>
+      </div>
+      <button class="btn-start" onclick="showWelcome()">กลับหน้าหลัก</button>
+    </div>`;
+}
+
+// ─── INIT ───
+updateHUD();
+showWelcome();
+</script>
+</body>
+</html>
