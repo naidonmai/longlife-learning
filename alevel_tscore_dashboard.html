@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-Level T-Score Dashboard — มช. ภาษาอังกฤษ 2569</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; padding: 24px 16px; }
+  h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .section-title { font-size: 12px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .card { background: #fff; border: 0.5px solid rgba(0,0,0,0.12); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .metric { background: #f5f5f2; border-radius: 8px; padding: 12px 14px; }
+  .metric-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+  .metric-value { font-size: 22px; font-weight: 500; color: #1a1a1a; }
+  .metric-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 500; }
+  .badge-pass { background: #EAF3DE; color: #3B6D11; }
+  .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .score-label { font-size: 13px; color: #666; width: 150px; flex-shrink: 0; }
+  .bar-wrap { flex: 1; background: #f0f0ec; border-radius: 4px; height: 20px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-num { font-size: 12px; font-weight: 500; width: 38px; text-align: right; flex-shrink: 0; }
+  .weight-badge { font-size: 11px; color: #aaa; width: 36px; flex-shrink: 0; }
+  .divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.1); margin: 14px 0; }
+  .row-sb { display: flex; justify-content: space-between; align-items: center; }
+  .note { font-size: 12px; color: #888; line-height: 1.6; }
+  .verdict-box { border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+  .verdict-warn { background: #FAEEDA; border: 0.5px solid #FAC775; }
+  .verdict-ok { background: #EAF3DE; border: 0.5px solid #C0DD97; }
+  .verdict-text { font-size: 14px; font-weight: 500; color: #633806; }
+  .verdict-text-ok { font-size: 14px; font-weight: 500; color: #3B6D11; }
+  .verdict-sub { font-size: 12px; color: #854F0B; margin-top: 4px; }
+  .verdict-sub-ok { font-size: 12px; color: #3B6D11; margin-top: 4px; }
+  .slider-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .tscore-input { width: 80px; font-size: 16px; font-weight: 500; text-align: center; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px; padding: 6px 8px; background: #fff; color: #1a1a1a; }
+  input[type=range] { flex: 1; accent-color: #185FA5; }
+  .result-big { font-size: 28px; font-weight: 500; }
+  .gate-bar { display: flex; align-items: stretch; gap: 2px; height: 28px; border-radius: 6px; overflow: hidden; margin: 10px 0 6px; }
+  .gate-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; text-align: center; line-height: 1.2; }
+  .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #f0f0ec; }
+    .card { background: #2a2a2a; border-color: rgba(255,255,255,0.1); }
+    .metric { background: #333; }
+    .metric-label, .note, .subtitle { color: #aaa; }
+    .metric-value { color: #f0f0ec; }
+    .bar-wrap { background: #333; }
+    .tscore-input { background: #2a2a2a; color: #f0f0ec; border-color: rgba(255,255,255,0.2); }
+    .divider { border-color: rgba(255,255,255,0.1); }
+    .footer { color: #555; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>A-Level T-Score Dashboard</h1>
+  <div class="subtitle">มช. คณะมนุษยศาสตร์ สาขาภาษาอังกฤษ (ภาคปกติ) — ประเมินโอกาสปี 2569</div>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">ภาษาอังกฤษ (80%)</div>
+      <div class="metric-value" style="color:#185FA5;">76.25</div>
+      <div class="metric-sub">คะแนนดิบ — จุดแข็งหลัก</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Weighted T-Score ประมาณ</div>
+      <div class="metric-value" id="total-score">58.9</div>
+      <div class="metric-sub">คำนวณจาก T-Score ประมาณการ</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">เกณฑ์ขั้นต่ำ อังกฤษ</div>
+      <div class="metric-value" style="color:#3B6D11;">T ≥ 50</div>
+      <div class="metric-sub"><span class="badge badge-pass">น่าผ่าน</span></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Floor ปี 2568</div>
+      <div class="metric-value" style="color:#854F0B;">62.11</div>
+      <div class="metric-sub">เกณฑ์ต่ำสุดที่ผ่านมา</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">คะแนนแต่ละวิชา + น้ำหนัก</div>
+    <div id="bars"></div>
+    <hr class="divider">
+    <div class="row-sb">
+      <span style="font-size:13px;color:#888;">Weighted T-Score รวม (ประมาณการ)</span>
+      <span style="font-size:20px;font-weight:500;">≈ 58.9</span>
+    </div>
+    <div class="note" style="margin-top:6px;">* T-Score แต่ละวิชาเป็นค่าประมาณ รอ Mean/SD จริงปี 2569 หลังประกาศผลสอบ</div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">เปรียบเทียบกับเกณฑ์ผ่านมา</div>
+    <div style="position:relative;width:100%;height:220px;">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">จำลอง T-Score ภาษาอังกฤษ</div>
+    <div class="note" style="margin-bottom:12px;">ลองปรับ T-Score ภาษาอังกฤษ เพื่อดูผล Weighted รวม</div>
+    <div class="slider-wrap">
+      <span style="font-size:13px;color:#888;">T-Score อังกฤษ</span>
+      <input type="range" min="40" max="75" value="62" step="1" id="eng-slider">
+      <input type="number" class="tscore-input" id="eng-input" value="62" min="40" max="75">
+    </div>
+    <div class="row-sb" style="margin-bottom:8px;">
+      <span style="font-size:13px;color:#888;">Weighted รวม</span>
+      <span class="result-big" id="sim-result">—</span>
+    </div>
+    <div id="sim-verdict"></div>
+    <hr class="divider">
+    <div class="section-title" style="margin-top:4px;">แถบประเมินโอกาส</div>
+    <div class="gate-bar">
+      <div class="gate-seg" style="width:20%;background:#F7C1C1;color:#A32D2D;">เสี่ยงมาก &lt;56</div>
+      <div class="gate-seg" style="width:25%;background:#FAEEDA;color:#854F0B;">เสี่ยง 56–62</div>
+      <div class="gate-seg" style="width:30%;background:#EAF3DE;color:#3B6D11;">ผ่านได้ 62–65</div>
+      <div class="gate-seg" style="width:25%;background:#C0DD97;color:#27500A;">แข็งแกร่ง 65+</div>
+    </div>
+    <div id="pointer-area"></div>
+  </div>
+
+  <div class="footer">สร้างด้วย Claude · ข้อมูลอ้างอิงจาก CUPT / mytcas.com · ประมาณการเท่านั้น ไม่ใช่ผลสอบจริง</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const subjects = [
+  { name: "ภาษาอังกฤษ (82)", raw: 76.25, weight: 80, tApprox: 62.5, color: "#185FA5" },
+  { name: "คณิตศาสตร์ (62)", raw: 21,    weight: 5,  tApprox: 37.5, color: "#D85A30" },
+  { name: "วิทยาศาสตร์ (63)", raw: 52,   weight: 5,  tApprox: 50,   color: "#1D9E75" },
+  { name: "สังคม (70)",        raw: 32,   weight: 5,  tApprox: 40,   color: "#BA7517" },
+  { name: "ภาษาไทย (81)",     raw: 50,   weight: 5,  tApprox: 50,   color: "#7F77DD" }
+];
+
+function calcWeighted(engT) {
+  return subjects.reduce((sum, s, i) => sum + (i === 0 ? engT : s.tApprox) * (s.weight / 100), 0);
+}
+
+const barsEl = document.getElementById("bars");
+subjects.forEach(s => {
+  const pct = Math.min(100, (s.tApprox / 75) * 100);
+  barsEl.innerHTML += `
+    <div class="score-row">
+      <span class="score-label">${s.name}</span>
+      <span class="weight-badge">${s.weight}%</span>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${s.color};"></div></div>
+      <span class="bar-num" style="color:${s.color};">${s.tApprox}</span>
+    </div>`;
+});
+
+new Chart(document.getElementById("trendChart"), {
+  type: "bar",
+  data: {
+    labels: ["2567 สูงสุด", "2567 ต่ำสุด", "2568 สูงสุด", "2568 ต่ำสุด", "ประมาณการ 2569"],
+    datasets: [{
+      label: "คะแนน",
+      data: [64.431, 56.119, 63.5022, 62.1054, 58.9],
+      backgroundColor: ["#B5D4F4","#B5D4F4","#9FE1CB","#9FE1CB","#FAC775"],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 50, max: 70, grid: { color: "rgba(128,128,128,0.1)" }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+function updateSim(engT) {
+  const w = calcWeighted(engT);
+  const el = document.getElementById("sim-result");
+  el.textContent = w.toFixed(2);
+  let html = "";
+  if (w >= 62.11) {
+    el.style.color = "#3B6D11";
+    html = `<div class="verdict-box verdict-ok"><div class="verdict-text-ok">มีโอกาสผ่านเกณฑ์ปี 2568</div><div class="verdict-sub-ok">Weighted ≥ 62.11 — อยู่ในช่วงที่ผ่านมา</div></div>`;
+  } else if (w >= 56.12) {
+    el.style.color = "#854F0B";
+    html = `<div class="verdict-box verdict-warn"><div class="verdict-text">เสี่ยง — ต่ำกว่า floor ปี 2568</div><div class="verdict-sub">Weighted อยู่ในช่วงปี 2567 แต่ต่ำกว่าเกณฑ์ปี 2568</div></div>`;
+  } else {
+    el.style.color = "#A32D2D";
+    html = `<div class="verdict-box" style="background:#FCEBEB;border:0.5px solid #F7C1C1;"><div class="verdict-text" style="color:#A32D2D;">เสี่ยงมาก</div><div class="verdict-sub" style="color:#A32D2D;">ต่ำกว่าเกณฑ์ทั้ง 2 ปี</div></div>`;
+  }
+  document.getElementById("sim-verdict").innerHTML = html;
+
+  let pos = 0;
+  if (w < 56) pos = (w - 40) / 16 * 20;
+  else if (w < 62) pos = 20 + (w - 56) / 6 * 25;
+  else if (w < 65) pos = 45 + (w - 62) / 3 * 30;
+  else pos = 75 + (w - 65) / 10 * 25;
+  pos = Math.min(98, Math.max(1, pos));
+  document.getElementById("pointer-area").innerHTML = `
+    <div style="position:relative;height:16px;">
+      <div style="position:absolute;left:${pos.toFixed(1)}%;transform:translateX(-50%);font-size:18px;line-height:1;">▼</div>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#888;">Weighted ≈ ${w.toFixed(2)}</div>`;
+}
+
+const slider = document.getElementById("eng-slider");
+const input  = document.getElementById("eng-input");
+slider.addEventListener("input", () => { input.value = slider.value; updateSim(+slider.value); });
+input.addEventListener("input",  () => { slider.value = input.value; updateSim(+input.value); });
+updateSim(62);
+</script>
+</body>
+</html>
