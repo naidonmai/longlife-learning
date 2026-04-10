@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMU TCAS3 2568 — T-Score Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a1a;padding:20px 16px;}
+.wrap{max-width:960px;margin:0 auto;}
+h1{font-size:18px;font-weight:500;margin-bottom:2px;}
+.sub{font-size:13px;color:#888;margin-bottom:20px;}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;}
+.scard{background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:12px 14px;}
+.scard .lbl{font-size:11px;color:#888;margin-bottom:3px;}
+.scard .val{font-size:24px;font-weight:500;}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center;}
+.controls input[type=text]{padding:7px 12px;border:0.5px solid rgba(0,0,0,0.2);border-radius:8px;font-size:13px;width:220px;background:#fff;color:#1a1a1a;}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:0.5px solid rgba(0,0,0,0.2);background:transparent;color:#555;transition:all .15s;}
+.filter-btn.active{background:#1a1a1a;color:#fff;border-color:transparent;}
+.sort-sel{padding:6px 10px;border:0.5px solid rgba(0,0,0,0.2);border-radius:8px;font-size:13px;background:#fff;color:#1a1a1a;}
+table{width:100%;border-collapse:collapse;background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:12px;overflow:hidden;font-size:13px;}
+thead th{padding:10px 12px;text-align:left;font-size:11px;font-weight:500;color:#888;border-bottom:0.5px solid rgba(0,0,0,0.08);background:#fafaf8;white-space:nowrap;}
+tbody tr{border-bottom:0.5px solid rgba(0,0,0,0.06);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#fafaf8;}
+td{padding:9px 12px;vertical-align:middle;}
+.badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:500;white-space:nowrap;}
+.badge-pass{background:#EAF3DE;color:#3B6D11;}
+.badge-risk{background:#FAEEDA;color:#854F0B;}
+.badge-fail{background:#FCEBEB;color:#A32D2D;}
+.gap-neg{color:#3B6D11;font-weight:500;}
+.gap-pos-sm{color:#D85A30;font-weight:500;}
+.gap-pos-lg{color:#A32D2D;font-weight:500;}
+.fac-tag{font-size:11px;color:#888;display:block;margin-top:1px;}
+.count{font-size:11px;color:#aaa;text-align:right;}
+.empty{text-align:center;padding:32px;color:#aaa;font-size:14px;}
+.tscore-highlight{color:#185FA5;font-weight:500;}
+@media(max-width:600px){
+  thead th:nth-child(4),thead th:nth-child(5),td:nth-child(4),td:nth-child(5){display:none;}
+}
+@media(prefers-color-scheme:dark){
+  body{background:#1a1a1a;color:#f0f0ec;}
+  .scard,table{background:#2a2a2a;border-color:rgba(255,255,255,0.1);}
+  .controls input[type=text],.sort-sel{background:#2a2a2a;color:#f0f0ec;border-color:rgba(255,255,255,0.2);}
+  .filter-btn{color:#aaa;border-color:rgba(255,255,255,0.2);}
+  .filter-btn.active{background:#f0f0ec;color:#1a1a1a;}
+  thead th{background:#222;color:#aaa;border-color:rgba(255,255,255,0.08);}
+  tbody tr{border-color:rgba(255,255,255,0.06);}
+  tbody tr:hover{background:#333;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>มช. TCAS3 2568 — วิเคราะห์โอกาสผ่านเกณฑ์</h1>
+  <div class="sub">T-Score ของผู้สมัคร = <span class="tscore-highlight">56.99</span> · ข้อมูล ณ 20 พ.ค. 2568 · ประมวลผลครั้งที่ 2</div>
+
+  <div class="summary">
+    <div class="scard"><div class="lbl">หลักสูตรทั้งหมด</div><div class="val" id="s-total">—</div></div>
+    <div class="scard"><div class="lbl" style="color:#3B6D11;">✔ ผ่านเกณฑ์</div><div class="val" style="color:#3B6D11;" id="s-pass">—</div></div>
+    <div class="scard"><div class="lbl" style="color:#854F0B;">⚠ เสี่ยง (&lt;3 คะแนน)</div><div class="val" style="color:#854F0B;" id="s-risk">—</div></div>
+    <div class="scard"><div class="lbl" style="color:#A32D2D;">✖ ไม่ผ่าน</div><div class="val" style="color:#A32D2D;" id="s-fail">—</div></div>
+    <div class="scard"><div class="lbl">T-Score ของคุณ</div><div class="val tscore-highlight">56.99</div></div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="ค้นหาคณะ / หลักสูตร...">
+    <button class="filter-btn active" data-filter="ALL">ทั้งหมด</button>
+    <button class="filter-btn" data-filter="PASS">ผ่านเกณฑ์</button>
+    <button class="filter-btn" data-filter="RISK">เสี่ยง</button>
+    <button class="filter-btn" data-filter="FAIL">ไม่ผ่าน</button>
+    <select class="sort-sel" id="sort-sel">
+      <option value="low-asc">เรียงคะแนนต่ำสุด ↑</option>
+      <option value="low-desc">เรียงคะแนนต่ำสุด ↓</option>
+      <option value="gap-asc">เรียงส่วนต่าง ↑</option>
+      <option value="faculty">เรียงตามคณะ</option>
+    </select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>คณะ / หลักสูตร</th>
+        <th>สถานะ</th>
+        <th>คะแนนสูงสุด</th>
+        <th>คะแนนต่ำสุด</th>
+        <th>ส่วนต่าง</th>
+        <th>รับ/ผ่าน</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div style="font-size:11px;color:#aaa;margin-top:10px;text-align:right;" id="row-count"></div>
+  <div style="font-size:11px;color:#bbb;margin-top:16px;text-align:center;">ข้อมูลจาก CUPT TCAS3 ปี 2568 · ประมวลผลครั้งที่ 2 (20 พ.ค. 2568) · ใช้ประกอบการตัดสินใจเท่านั้น</div>
+</div>
+
+<script>
+const RAW_DATA = 
+[{"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.การท่องเที่ยวและการโรงแรม", "high": 60.6405, "low": 56.5127, "gap": -0.4773, "accept": 0, "apply": 0, "passed": 0, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.การท่องเที่ยวและการโรงแรม", "high": 57.952, "low": 54.3354, "gap": -2.6546, "accept": 30, "apply": 685, "passed": 30, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.สารสนเทศศึกษา", "high": 55.5546, "low": 52.6358, "gap": -4.3542, "accept": 10, "apply": 545, "passed": 10, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 61.3171, "low": 57.6914, "gap": 0.7014, "accept": 8, "apply": 477, "passed": 8, "status": "RISK"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 64.2732, "low": 60.9351, "gap": 3.9451, "accept": 6, "apply": 331, "passed": 6, "status": "FAIL"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 54.7811, "low": 54.7811, "gap": -2.2089, "accept": 1, "apply": 11, "passed": 1, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 58.0424, "low": 58.0424, "gap": 1.0524, "accept": 1, "apply": 5, "passed": 1, "status": "RISK"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 57.0611, "low": 55.5367, "gap": -1.4533, "accept": 8, "apply": 214, "passed": 8, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 59.8928, "low": 57.4569, "gap": 0.4669, "accept": 7, "apply": 161, "passed": 7, "status": "RISK"}, {"faculty": "มนุษยศาสตร์", "curriculum": "วท.บ.จิตวิทยา", "high": 50.9568, "low": 50.9568, "gap": -6.0332, "accept": 1, "apply": 7, "passed": 1, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ภาษาพม่า", "high": 59.056, "low": 51.3263, "gap": -5.6637, "accept": 14, "apply": 159, "passed": 14, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ภาษาฝรั่งเศส", "high": 62.33, "low": 52.7806, "gap": -4.2094, "accept": 9, "apply": 84, "passed": 9, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ภาษาอังกฤษ", "high": 63.5022, "low": 62.1054, "gap": 5.1154, "accept": 0, "apply": 0, "passed": 0, "status": "FAIL"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ภาษาอังกฤษ", "high": 61.3707, "low": 61.3707, "gap": 4.3807, "accept": 1, "apply": 43, "passed": 1, "status": "FAIL"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.บ้านและชุมชน", "high": 57.3651, "low": 53.8523, "gap": -3.1377, "accept": 8, "apply": 250, "passed": 8, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.มนุษยศาสตร์และความยั่งยืน", "high": 62.4252, "low": 57.3664, "gap": 0.3764, "accept": 12, "apply": 64, "passed": 12, "status": "RISK"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 60.3458, "low": 56.5178, "gap": -0.4722, "accept": 35, "apply": 831, "passed": 35, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 66.6321, "low": 61.7909, "gap": 4.8009, "accept": 15, "apply": 542, "passed": 15, "status": "FAIL"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 60.4725, "low": 57.2121, "gap": 0.2221, "accept": 20, "apply": 153, "passed": 20, "status": "RISK"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 56.1561, "low": 52.6327, "gap": -4.3573, "accept": 18, "apply": 483, "passed": 18, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 70.5757, "low": 63.6954, "gap": 6.7054, "accept": 17, "apply": 73, "passed": 17, "status": "FAIL"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 63.4958, "low": 53.8737, "gap": -3.1163, "accept": 12, "apply": 237, "passed": 12, "status": "PASS"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 62.1077, "low": 60.2448, "gap": 3.2548, "accept": 7, "apply": 322, "passed": 7, "status": "FAIL"}, {"faculty": "มนุษยศาสตร์", "curriculum": "ศศ.บ.ศิลปศาสตรบัณฑิต", "high": 64.1608, "low": 60.738, "gap": 3.748, "accept": 35, "apply": 785, "passed": 35, "status": "FAIL"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 60.7899, "low": 58.2285, "gap": 1.2385, "accept": 10, "apply": 612, "passed": 10, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 60.1182, "low": 57.3123, "gap": 0.3223, "accept": 5, "apply": 332, "passed": 5, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 62.519, "low": 57.9911, "gap": 1.0011, "accept": 19, "apply": 436, "passed": 19, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 61.0527, "low": 57.6305, "gap": 0.6405, "accept": 9, "apply": 137, "passed": 9, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 62.4281, "low": 58.2775, "gap": 1.2875, "accept": 11, "apply": 252, "passed": 11, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 61.1252, "low": 55.7096, "gap": -1.2804, "accept": 8, "apply": 114, "passed": 8, "status": "PASS"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 61.7472, "low": 59.4264, "gap": 2.4364, "accept": 8, "apply": 647, "passed": 8, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 62.6448, "low": 60.5337, "gap": 3.5437, "accept": 6, "apply": 383, "passed": 6, "status": "FAIL"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 59.1413, "low": 55.8469, "gap": -1.1431, "accept": 5, "apply": 61, "passed": 5, "status": "PASS"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 61.3442, "low": 59.6318, "gap": 2.6418, "accept": 6, "apply": 490, "passed": 6, "status": "RISK"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 57.1547, "low": 53.9886, "gap": -3.0014, "accept": 8, "apply": 170, "passed": 8, "status": "PASS"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 57.6137, "low": 55.6087, "gap": -1.3813, "accept": 6, "apply": 125, "passed": 6, "status": "PASS"}, {"faculty": "ศึกษาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 57.4231, "low": 56.4309, "gap": -0.5591, "accept": 5, "apply": 130, "passed": 5, "status": "PASS"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 59.189, "low": 57.6433, "gap": 0.6533, "accept": 3, "apply": 478, "passed": 3, "status": "RISK"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 59.4951, "low": 54.3697, "gap": -2.6203, "accept": 15, "apply": 489, "passed": 15, "status": "PASS"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 60.3838, "low": 56.1133, "gap": -0.8767, "accept": 7, "apply": 494, "passed": 7, "status": "PASS"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 56.8345, "low": 52.8774, "gap": -4.1126, "accept": 10, "apply": 226, "passed": 10, "status": "PASS"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 59.532, "low": 54.1863, "gap": -2.8037, "accept": 9, "apply": 223, "passed": 9, "status": "PASS"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 54.362, "low": 52.7578, "gap": -4.2322, "accept": 10, "apply": 128, "passed": 10, "status": "PASS"}, {"faculty": "วิจิตรศิลป์", "curriculum": "(ไม่ระบุ)", "high": 55.6117, "low": 53.3483, "gap": -3.6417, "accept": 16, "apply": 229, "passed": 16, "status": "PASS"}, {"faculty": "สังคมศาสตร์", "curriculum": "ศศ.บ.อาเซียนศึกษา", "high": 51.3244, "low": 49.6224, "gap": -7.3676, "accept": 8, "apply": 75, "passed": 8, "status": "PASS"}, {"faculty": "สังคมศาสตร์", "curriculum": "ศศ.บ.อาเซียนศึกษา", "high": 53.8514, "low": 51.3546, "gap": -5.6354, "accept": 20, "apply": 360, "passed": 20, "status": "PASS"}, {"faculty": "สังคมศาสตร์", "curriculum": "วท.บ.ภูมิศาสตร์", "high": 53.5747, "low": 50.1469, "gap": -6.8431, "accept": 16, "apply": 90, "passed": 16, "status": "PASS"}, {"faculty": "สังคมศาสตร์", "curriculum": "วท.บ.ภูมิศาสตร์", "high": 54.817, "low": 52.4954, "gap": -4.4946, "accept": 15, "apply": 240, "passed": 15, "status": "PASS"}, {"faculty": "สังคมศาสตร์", "curriculum": "ศศ.บ.สังคมวิทยาและมานุษยวิทยา", "high": 58.4131, "low": 54.1557, "gap": -2.8343, "accept": 23, "apply": 275, "passed": 23, "status": "PASS"}, {"faculty": "สังคมศาสตร์", "curriculum": "ศศ.บ.สังคมวิทยาและมานุษยวิทยา", "high": 61.1103, "low": 55.9358, "gap": -1.0542, "accept": 23, "apply": 428, "passed": 23, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 59.3017, "low": 53.2539, "gap": -3.7361, "accept": 36, "apply": 662, "passed": 36, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 65.9215, "low": 58.6894, "gap": 1.6994, "accept": 36, "apply": 364, "passed": 36, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 57.2741, "low": 54.2991, "gap": -2.6909, "accept": 25, "apply": 948, "passed": 25, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 69.3427, "low": 59.7944, "gap": 2.8044, "accept": 25, "apply": 308, "passed": 25, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.ฟิสิกส์/วท.บ.วัสดุศาสตร์", "high": 56.327, "low": 51.4354, "gap": -5.5546, "accept": 20, "apply": 335, "passed": 20, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.ฟิสิกส์/วท.บ.วัสดุศาสตร์", "high": 63.5923, "low": 57.496, "gap": 0.506, "accept": 20, "apply": 177, "passed": 20, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.คณิตศาสตร์/วท.บ.สถิติ", "high": 56.174, "low": 52.1446, "gap": -4.8454, "accept": 21, "apply": 409, "passed": 21, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.คณิตศาสตร์/วท.บ.สถิติ", "high": 63.3862, "low": 58.2963, "gap": 1.3063, "accept": 21, "apply": 238, "passed": 21, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.ธรณีวทิ ยา", "high": 54.8926, "low": 52.427, "gap": -4.563, "accept": 8, "apply": 274, "passed": 8, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.ธรณีวทิ ยา", "high": 63.0167, "low": 59.4041, "gap": 2.4141, "accept": 8, "apply": 119, "passed": 8, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.วิทยาศาสตร์สิ่งแวดล้อม", "high": 52.981, "low": 51.51, "gap": -5.48, "accept": 5, "apply": 80, "passed": 5, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.วิทยาศาสตร์สิ่งแวดล้อม", "high": 58.9278, "low": 57.058, "gap": 0.068, "accept": 5, "apply": 51, "passed": 5, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.อัญมณีวทิ ยา", "high": 52.269, "low": 51.0244, "gap": -5.9656, "accept": 6, "apply": 169, "passed": 6, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.อัญมณีวทิ ยา", "high": 62.4673, "low": 57.2286, "gap": 0.2386, "accept": 6, "apply": 66, "passed": 6, "status": "RISK"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.วิทยาการคอมพิวเตอร์", "high": 58.0984, "low": 53.0537, "gap": -3.9363, "accept": 20, "apply": 466, "passed": 20, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.วิทยาการคอมพิวเตอร์", "high": 69.2836, "low": 66.4541, "gap": 9.4641, "accept": 8, "apply": 424, "passed": 8, "status": "FAIL"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.วิทยาการข้อมูล", "high": 57.1207, "low": 52.864, "gap": -4.126, "accept": 12, "apply": 158, "passed": 12, "status": "PASS"}, {"faculty": "วิทยาศาสตร์", "curriculum": "วท.บ.วิทยาการข้อมูล", "high": 69.9466, "low": 63.7694, "gap": 6.7794, "accept": 7, "apply": 103, "passed": 7, "status": "FAIL"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมคอมพิวเตอร์", "high": 67.6058, "low": 65.4554, "gap": 8.4654, "accept": 10, "apply": 528, "passed": 10, "status": "FAIL"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 59.9868, "low": 55.4521, "gap": -1.5379, "accept": 8, "apply": 72, "passed": 8, "status": "PASS"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมเครื่องกล", "high": 63.9528, "low": 58.6816, "gap": 1.6916, "accept": 60, "apply": 845, "passed": 60, "status": "RISK"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 57.9711, "low": 52.5427, "gap": -4.4473, "accept": 10, "apply": 86, "passed": 10, "status": "PASS"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมไฟฟ้า", "high": 73.227, "low": 62.402, "gap": 5.412, "accept": 25, "apply": 599, "passed": 25, "status": "FAIL"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 60.1623, "low": 53.249, "gap": -3.741, "accept": 10, "apply": 151, "passed": 10, "status": "PASS"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมโยธา", "high": 66.451, "low": 58.8842, "gap": 1.8942, "accept": 0, "apply": 0, "passed": 0, "status": "RISK"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมโยธา", "high": 56.633, "low": 53.8984, "gap": -3.0916, "accept": 10, "apply": 134, "passed": 10, "status": "PASS"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมสิ่งแวดล้อม", "high": 60.4446, "low": 59.0574, "gap": 2.0674, "accept": 5, "apply": 230, "passed": 5, "status": "RISK"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมหุ่นยนต์และปัญญาประดิษฐ์ 4361311-วิศวกรรมหุ่นยนต์", "high": 63.7428, "low": 58.0424, "gap": 1.0524, "accept": 30, "apply": 207, "passed": 30, "status": "RISK"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมเหมืองแร่และปิโตรเลียม", "high": 59.9176, "low": 57.288, "gap": 0.298, "accept": 15, "apply": 233, "passed": 15, "status": "RISK"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมอุตสาหการ", "high": 64.7328, "low": 57.658, "gap": 0.668, "accept": 40, "apply": 594, "passed": 40, "status": "RISK"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมอุตสาหการ", "high": 61.6664, "low": 54.5126, "gap": -2.4774, "accept": 60, "apply": 536, "passed": 60, "status": "PASS"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 65.6438, "low": 51.767, "gap": -5.223, "accept": 15, "apply": 100, "passed": 15, "status": "PASS"}, {"faculty": "วิศวกรรมศาสตร์", "curriculum": "วศ.บ.วิศวกรรมบูรณาการ", "high": 62.8776, "low": 56.5076, "gap": -0.4824, "accept": 10, "apply": 123, "passed": 10, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เกษตรศาสตร์", "high": 56.964, "low": 45.5878, "gap": -11.4022, "accept": 120, "apply": 309, "passed": 120, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เกษตรศาสตร์", "high": 53.024, "low": 47.1623, "gap": -9.8277, "accept": 20, "apply": 79, "passed": 20, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เกษตรศาสตร์", "high": 51.7505, "low": 44.763, "gap": -12.227, "accept": 25, "apply": 37, "passed": 11, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เกษตรศาสตร์", "high": 53.3909, "low": 45.0105, "gap": -11.9795, "accept": 30, "apply": 21, "passed": 4, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เกษตรศาสตร์", "high": 50.539, "low": 43.8484, "gap": -13.1416, "accept": 25, "apply": 57, "passed": 11, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 53.431, "low": 43.3052, "gap": -13.6848, "accept": 70, "apply": 86, "passed": 50, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เกษตรที่สูงและทรัพยากรป่าไม้", "high": 55.8473, "low": 46.8081, "gap": -10.1819, "accept": 55, "apply": 124, "passed": 55, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.สัตวศาสตร์", "high": 60.7945, "low": 52.7138, "gap": -4.2762, "accept": 28, "apply": 193, "passed": 28, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.สัตวศาสตร์", "high": 52.371, "low": 47.8578, "gap": -9.1322, "accept": 9, "apply": 46, "passed": 9, "status": "PASS"}, {"faculty": "เกษตรศาสตร์", "curriculum": "วท.บ.เศรษฐศาสตร์เกษตรและธุรกิจเกษตร 4384311-เศรษฐศาสตร์", "high": 55.9936, "low": 50.49, "gap": -6.5, "accept": 73, "apply": 380, "passed": 73, "status": "PASS"}, {"faculty": "เทคนิคการแพทย์", "curriculum": "วท.บ.กายภาพบาบัด", "high": 68.107, "low": 65.968, "gap": 8.978, "accept": 0, "apply": 0, "passed": 0, "status": "FAIL"}, {"faculty": "เทคนิคการแพทย์", "curriculum": "วท.บ.กิจกรรมบาบัด", "high": 60.1644, "low": 57.3549, "gap": 0.3649, "accept": 32, "apply": 635, "passed": 32, "status": "RISK"}, {"faculty": "เทคนิคการแพทย์", "curriculum": "(ไม่ระบุ)", "high": 62.6661, "low": 58.0111, "gap": 1.0211, "accept": 12, "apply": 744, "passed": 12, "status": "RISK"}, {"faculty": "เทคนิคการแพทย์", "curriculum": "ทพ.บ.เทคนิคการแพทยบัณฑิต", "high": 63.7357, "low": 60.5191, "gap": 3.5291, "accept": 0, "apply": 0, "passed": 0, "status": "FAIL"}, {"faculty": "เทคนิคการแพทย์", "curriculum": "วท.บ.รังสีเทคนิค", "high": 63.203, "low": 58.5993, "gap": 1.6093, "accept": 0, "apply": 0, "passed": 0, "status": "RISK"}, {"faculty": "พยาบาลศาสตร์", "curriculum": "พย.บ.พยาบาลศาสตรบัณฑิต", "high": 68.9521, "low": 59.7335, "gap": 2.7435, "accept": 0, "apply": 0, "passed": 0, "status": "RISK"}, {"faculty": "พยาบาลศาสตร์", "curriculum": "พย.บ.พยาบาลศาสตรบัณฑิต", "high": 59.3428, "low": 58.8521, "gap": 1.8621, "accept": 5, "apply": 176, "passed": 5, "status": "RISK"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "(ไม่ระบุ)", "high": 57.6157, "low": 54.258, "gap": -2.732, "accept": 10, "apply": 349, "passed": 10, "status": "PASS"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "วท.บ.วิศวกรรมกระบวนการอาหาร", "high": 54.23, "low": 49.9467, "gap": -7.0433, "accept": 25, "apply": 294, "passed": 25, "status": "PASS"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "(ไม่ระบุ)", "high": 54.2921, "low": 49.2933, "gap": -7.6967, "accept": 29, "apply": 178, "passed": 29, "status": "PASS"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "(ไม่ระบุ)", "high": 50.7126, "low": 48.7214, "gap": -8.2686, "accept": 31, "apply": 273, "passed": 31, "status": "PASS"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "วท.บ.เทคโนโลยีการพัฒนาผลิตภัณฑ์", "high": 53.4741, "low": 49.1656, "gap": -7.8244, "accept": 25, "apply": 212, "passed": 25, "status": "PASS"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "วท.บ.เทคโนโลยีการบรรจุ", "high": 51.3643, "low": 48.3531, "gap": -8.6369, "accept": 47, "apply": 305, "passed": 47, "status": "PASS"}, {"faculty": "อุตสาหกรรมเกษตร", "curriculum": "(ไม่ระบุ)", "high": 56.1599, "low": 48.124, "gap": -8.866, "accept": 37, "apply": 187, "passed": 37, "status": "PASS"}, {"faculty": "สัตวแพทยศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 71.7776, "low": 67.6679, "gap": 10.6779, "accept": 0, "apply": 0, "passed": 0, "status": "FAIL"}, {"faculty": "สัตวแพทยศาสตร์", "curriculum": "วท.บ.การพยาบาลสัตว์", "high": 64.7473, "low": 58.6673, "gap": 1.6773, "accept": 15, "apply": 740, "passed": 15, "status": "RISK"}, {"faculty": "บริหารธุรกิจ", "curriculum": "(ไม่ระบุ)", "high": 64.4262, "low": 59.7811, "gap": 2.7911, "accept": 0, "apply": 0, "passed": 0, "status": "RISK"}, {"faculty": "บริหารธุรกิจ", "curriculum": "(ไม่ระบุ)", "high": 62.4556, "low": 58.1846, "gap": 1.1946, "accept": 0, "apply": 0, "passed": 0, "status": "RISK"}, {"faculty": "บริหารธุรกิจ", "curriculum": "(ไม่ระบุ)", "high": 59.7615, "low": 56.5147, "gap": -0.4753, "accept": 70, "apply": 760, "passed": 70, "status": "PASS"}, {"faculty": "บริหารธุรกิจ", "curriculum": "(ไม่ระบุ)", "high": 58.2356, "low": 54.9938, "gap": -1.9962, "accept": 80, "apply": 590, "passed": 80, "status": "PASS"}, {"faculty": "บริหารธุรกิจ", "curriculum": "บธ.บ.การจัดการธุรกิจบริการ", "high": 60.6297, "low": 55.6107, "gap": -1.3793, "accept": 10, "apply": 257, "passed": 10, "status": "PASS"}, {"faculty": "บริหารธุรกิจ", "curriculum": "บธ.บ.การจัดการธุรกิจบริการ", "high": 57.9181, "low": 53.985, "gap": -3.005, "accept": 15, "apply": 126, "passed": 15, "status": "PASS"}, {"faculty": "บริหารธุรกิจ", "curriculum": "บช.บ.บัญชีบัณฑิต", "high": 58.6248, "low": 47.3288, "gap": -9.6612, "accept": 15, "apply": 16, "passed": 7, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 60.155, "low": 52.7238, "gap": -4.2662, "accept": 0, "apply": 0, "passed": 0, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 59.5705, "low": 53.3934, "gap": -3.5966, "accept": 0, "apply": 0, "passed": 0, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 52.704, "low": 50.6074, "gap": -6.3826, "accept": 5, "apply": 30, "passed": 5, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 55.6484, "low": 52.7886, "gap": -4.2014, "accept": 5, "apply": 49, "passed": 5, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 55.9456, "low": 53.3137, "gap": -3.6763, "accept": 5, "apply": 25, "passed": 5, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 56.137, "low": 53.202, "gap": -3.788, "accept": 5, "apply": 47, "passed": 5, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 52.537, "low": 50.5784, "gap": -6.4116, "accept": 45, "apply": 290, "passed": 45, "status": "PASS"}, {"faculty": "เศรษฐศาสตร์", "curriculum": "ศ.บ.เศรษฐศาสตร์", "high": 56.2822, "low": 51.6408, "gap": -5.3492, "accept": 45, "apply": 332, "passed": 45, "status": "PASS"}, {"faculty": "สถาปัตยกรรมศาสตร์", "curriculum": "วท.บ.การออกแบบอุตสาหกรรม", "high": 54.8935, "low": 52.9183, "gap": -4.0717, "accept": 13, "apply": 113, "passed": 13, "status": "PASS"}, {"faculty": "สถาปัตยกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 56.0848, "low": 52.9516, "gap": -4.0384, "accept": 26, "apply": 246, "passed": 26, "status": "PASS"}, {"faculty": "สถาปัตยกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 62.3104, "low": 55.0426, "gap": -1.9474, "accept": 40, "apply": 512, "passed": 40, "status": "PASS"}, {"faculty": "สถาปัตยกรรมศาสตร์", "curriculum": "วท.บ.สถาปัตยกรรม", "high": 56.1348, "low": 50.645, "gap": -6.345, "accept": 39, "apply": 162, "passed": 39, "status": "PASS"}, {"faculty": "สถาปัตยกรรมศาสตร์", "curriculum": "(ไม่ระบุ)", "high": 52.8344, "low": 48.4422, "gap": -8.5478, "accept": 27, "apply": 15, "passed": 4, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 58.6061, "low": 52.985, "gap": -4.005, "accept": 12, "apply": 437, "passed": 12, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 58.7492, "low": 54.926, "gap": -2.064, "accept": 0, "apply": 0, "passed": 0, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 59.0334, "low": 52.7841, "gap": -4.2059, "accept": 6, "apply": 256, "passed": 6, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 56.2642, "low": 54.336, "gap": -2.654, "accept": 8, "apply": 602, "passed": 8, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 55.8984, "low": 49.596, "gap": -7.394, "accept": 6, "apply": 18, "passed": 6, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 58.0266, "low": 52.9234, "gap": -4.0666, "accept": 9, "apply": 51, "passed": 9, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 51.0649, "low": 50.6293, "gap": -6.3607, "accept": 2, "apply": 15, "passed": 2, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.การสื่อสารมวลชน", "high": 55.1108, "low": 54.7394, "gap": -2.2506, "accept": 2, "apply": 42, "passed": 2, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.ภาพยนตร์ดิจิทัล", "high": 56.5426, "low": 50.9864, "gap": -6.0036, "accept": 8, "apply": 160, "passed": 8, "status": "PASS"}, {"faculty": "การสื่อสารมวลชน", "curriculum": "ศศ.บ.ภาพยนตร์ดิจิทัล", "high": 59.189, "low": 53.9338, "gap": -3.0562, "accept": 11, "apply": 351, "passed": 11, "status": "PASS"}, {"faculty": "?", "curriculum": "วท.บ.ศาสตร์แห่งความยั่งยืน", "high": 49.5861, "low": 47.3182, "gap": -9.6718, "accept": 13, "apply": 37, "passed": 13, "status": "PASS"}, {"faculty": "?", "curriculum": "วท.บ.ศาสตร์แห่งความยั่งยืน", "high": 54.5448, "low": 50.163, "gap": -6.827, "accept": 12, "apply": 73, "passed": 12, "status": "PASS"}, {"faculty": "?", "curriculum": "รป.บ.รัฐประศาสนศาสตรบัณฑิต", "high": 58.927, "low": 55.9012, "gap": -1.0888, "accept": 12, "apply": 353, "passed": 12, "status": "PASS"}, {"faculty": "?", "curriculum": "รป.บ.รัฐประศาสนศาสตรบัณฑิต", "high": 63.6462, "low": 56.8036, "gap": -0.1864, "accept": 12, "apply": 460, "passed": 12, "status": "PASS"}, {"faculty": "?", "curriculum": "ร.บ.การเมืองและการปกครอง", "high": 63.9102, "low": 60.2761, "gap": 3.2861, "accept": 13, "apply": 188, "passed": 13, "status": "FAIL"}, {"faculty": "?", "curriculum": "ร.บ.การเมืองและการปกครอง", "high": 63.8439, "low": 61.9774, "gap": 4.9874, "accept": 10, "apply": 322, "passed": 10, "status": "FAIL"}, {"faculty": "?", "curriculum": "ร.บ.การระหว่างประเทศ", "high": 63.0988, "low": 60.8551, "gap": 3.8651, "accept": 6, "apply": 135, "passed": 6, "status": "FAIL"}, {"faculty": "?", "curriculum": "ร.บ.การระหว่างประเทศ", "high": 64.9491, "low": 61.3495, "gap": 4.3595, "accept": 10, "apply": 269, "passed": 10, "status": "FAIL"}, {"faculty": "นิติศาสตร์", "curriculum": "น.บ.นิติศาสตรบัณฑิต", "high": 59.8469, "low": 57.2793, "gap": 0.2893, "accept": 5, "apply": 726, "passed": 5, "status": "RISK"}, {"faculty": "นิติศาสตร์", "curriculum": "น.บ.นิติศาสตรบัณฑิต", "high": 60.3054, "low": 59.6762, "gap": 2.6862, "accept": 5, "apply": 975, "passed": 5, "status": "RISK"}, {"faculty": "นิติศาสตร์", "curriculum": "น.บ.นิติศาสตรบัณฑิต", "high": 55.7587, "low": 53.1334, "gap": -3.8566, "accept": 21, "apply": 457, "passed": 21, "status": "PASS"}, {"faculty": "นิติศาสตร์", "curriculum": "น.บ.นิติศาสตรบัณฑิต", "high": 58.631, "low": 52.9282, "gap": -4.0618, "accept": 63, "apply": 673, "passed": 63, "status": "PASS"}, {"faculty": "?", "curriculum": "(ไม่ระบุ)", "high": 65.9415, "low": 58.1799, "gap": 1.1899, "accept": 30, "apply": 461, "passed": 30, "status": "RISK"}, {"faculty": "?", "curriculum": "(ไม่ระบุ)", "high": 58.0562, "low": 57.2166, "gap": 0.2266, "accept": 5, "apply": 88, "passed": 5, "status": "RISK"}, {"faculty": "?", "curriculum": "วท.บ.วิศวกรรมซอฟต์แวร์", "high": 62.5005, "low": 56.798, "gap": -0.192, "accept": 25, "apply": 113, "passed": 25, "status": "PASS"}, {"faculty": "?", "curriculum": "วท.บ.ดิจิทัลเกม", "high": 61.9117, "low": 59.9808, "gap": 2.9908, "accept": 5, "apply": 213, "passed": 5, "status": "RISK"}, {"faculty": "?", "curriculum": "ศศ.บ.แอนนิเมชันและวิชวลเอฟเฟกต์", "high": 68.3726, "low": 60.8394, "gap": 3.8494, "accept": 4, "apply": 215, "passed": 4, "status": "FAIL"}, {"faculty": "?", "curriculum": "วท.บ.นวัตกรรมดิจิทัล", "high": 53.037, "low": 47.416, "gap": -9.574, "accept": 10, "apply": 22, "passed": 10, "status": "PASS"}, {"faculty": "?", "curriculum": "วท.บ.นวัตกรรมดิจิทัล", "high": 57.2415, "low": 52.475, "gap": -4.515, "accept": 15, "apply": 64, "passed": 15, "status": "PASS"}, {"faculty": "?", "curriculum": "วท.บ.นวัตกรรมดิจิทัล", "high": 83.3333, "low": 83.3333, "gap": 26.3433, "accept": 1, "apply": 2, "passed": 1, "status": "FAIL"}]
+;
+
+let currentFilter = 'ALL';
+let currentSearch = '';
+let currentSort = 'low-asc';
+
+function getStatus(r){return r.status;}
+function gapClass(g){if(g<=0)return 'gap-neg';if(g<1.5)return 'gap-pos-sm';return 'gap-pos-lg';}
+function gapText(g){if(g<=0)return `+${Math.abs(g).toFixed(2)} (มากกว่า)`;return `-${g.toFixed(2)} (ขาดอีก)`;}
+
+function render(){
+  let data = RAW_DATA.filter(r => {
+    if(currentFilter !== 'ALL' && r.status !== currentFilter) return false;
+    if(currentSearch){
+      const q = currentSearch.toLowerCase();
+      return r.faculty.includes(currentSearch) || r.curriculum.includes(currentSearch) ||
+             r.faculty.toLowerCase().includes(q) || r.curriculum.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  data.sort((a,b)=>{
+    if(currentSort==='low-asc') return a.low - b.low;
+    if(currentSort==='low-desc') return b.low - a.low;
+    if(currentSort==='gap-asc') return a.gap - b.gap;
+    if(currentSort==='faculty') return a.faculty.localeCompare(b.faculty,'th');
+    return 0;
+  });
+
+  const tbody = document.getElementById('tbody');
+  if(data.length===0){tbody.innerHTML='<tr><td colspan="7" class="empty">ไม่พบข้อมูลที่ตรงกัน</td></tr>';document.getElementById('row-count').textContent='';return;}
+
+  tbody.innerHTML = data.map((r,i)=>{
+    const badgeClass = r.status==='PASS'?'badge-pass':r.status==='RISK'?'badge-risk':'badge-fail';
+    const badgeText = r.status==='PASS'?'✔ ผ่าน':r.status==='RISK'?'⚠ เสี่ยง':'✖ ไม่ผ่าน';
+    const gc = gapClass(r.gap);
+    const gt = gapText(r.gap);
+    const accepted = r.accept>0?`${r.accept}/${r.passed}`:'—';
+    return `<tr>
+      <td style="color:#bbb;font-size:11px;">${i+1}</td>
+      <td><span style="font-size:13px;">${r.curriculum}</span><span class="fac-tag">คณะ${r.faculty}</span></td>
+      <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+      <td style="font-size:12px;color:#888;">${r.high.toFixed(4)}</td>
+      <td style="font-size:13px;font-weight:500;">${r.low.toFixed(4)}</td>
+      <td class="${gc}" style="font-size:12px;">${gt}</td>
+      <td class="count">${accepted}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('row-count').textContent = `แสดง ${data.length} รายการ`;
+}
+
+function updateSummary(){
+  const pass = RAW_DATA.filter(r=>r.status==='PASS').length;
+  const risk = RAW_DATA.filter(r=>r.status==='RISK').length;
+  const fail = RAW_DATA.filter(r=>r.status==='FAIL').length;
+  document.getElementById('s-total').textContent = RAW_DATA.length;
+  document.getElementById('s-pass').textContent = pass;
+  document.getElementById('s-risk').textContent = risk;
+  document.getElementById('s-fail').textContent = fail;
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input',e=>{
+  currentSearch = e.target.value;
+  render();
+});
+
+document.getElementById('sort-sel').addEventListener('change',e=>{
+  currentSort = e.target.value;
+  render();
+});
+
+updateSummary();
+render();
+</script>
+</body>
+</html>
