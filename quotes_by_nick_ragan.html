@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotes by Nick Ragan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    /* ล้างค่าขอบเดิมเพื่อให้รูปเต็มจอ */
+    body, html { 
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+
+    #quote-container {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      /* 1. ใส่ URL รูปภาพ Background ของคุณที่นี่ */
+      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://drive.google.com/file/d/1JYD8ab1bJWtJpIrq0pmcGfPo2V-MUWwq/view?usp=drive_link'); 
+      background-size: cover;
+      background-position: center;
+      color: white; /* 2. ตัวอักษรสีขาวตามสั่ง */
+      text-align: center;
+      font-family: 'Sarabun', sans-serif;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #quote-text {
+      font-size: 1.8rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* เพิ่มเงาให้ตัวหนังสืออ่านง่ายขึ้น */
+    }
+
+    .author {
+      font-size: 1.1rem;
+      font-weight: 300;
+      opacity: 0.9;
+      display: block; /* บังคับขึ้นบรรทัดใหม่ */
+    }
+  </style>
+</head>
+<body>
+
+<div id="quote-container">
+  <p id="quote-text">กำลังโหลดข้อคิดเตือนใจ...</p>
+  <span class="author">- Nick Ragan -</span>
+</div>
+
+<script>
+  // 3. ใส่ URL ของไฟล์ quotes.txt (แบบ Raw จาก GitHub) ที่นี่
+  const quotesUrl = 'https://naidonmai.github.io/longlife-learning/QuotesbyNickRagan.txt'; 
+
+  function updateQuote(quotes) {
+    const quoteTextElement = document.getElementById("quote-text");
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    quoteTextElement.textContent = quotes[randomIndex].trim();
+  }
+
+  fetch(quotesUrl)
+    .then(response => response.text())
+    .then(quotesText => {
+      // แยกบรรทัดและกรองบรรทัดว่าง
+      const quotesArray = quotesText.split('\n').filter(line => line.trim() !== "");
+      updateQuote(quotesArray);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById("quote-text").textContent = "เชื่อมต่อข้อมูลล้มเหลว";
+    });
+</script>
+
+</body>
+</html>
