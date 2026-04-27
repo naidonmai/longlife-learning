@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โลกเปลี่ยนแล้ว — อนาคตลูกเราอยู่ตรงไหน?</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Prompt:wght@300;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card2: #1e2130;
+    --accent: #f5a623;
+    --accent2: #e05c5c;
+    --accent3: #4ec9b0;
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1225 50%, #0f1117 100%);
+    padding: 60px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(245,166,35,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.3);
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero h1 {
+    font-family: 'Prompt', sans-serif;
+    font-size: clamp(26px, 6vw, 42px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s ease both;
+  }
+  .nurse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(78,201,176,0.1);
+    border: 1px solid rgba(78,201,176,0.25);
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    color: var(--accent3);
+    animation: fadeUp 0.9s ease both;
+  }
+
+  /* Nav dots */
+  .nav-steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 0 0;
+    animation: fadeUp 1s ease both;
+  }
+  .step-dot {
+    width: 32px; height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--accent); width: 48px; }
+
+  /* Main container */
+  .container { max-width: 640px; margin: 0 auto; padding: 0 16px 80px; }
+
+  /* Section */
+  .section { margin-top: 32px; animation: fadeUp 0.5s ease both; }
+  .section-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Prompt', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  /* Story card */
+  .story-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .story-card:hover { transform: translateY(-2px); border-color: rgba(245,166,35,0.3); }
+  .story-card.active { border-color: var(--accent); background: rgba(245,166,35,0.05); }
+  .story-emoji { font-size: 32px; margin-bottom: 12px; display: block; }
+  .story-card h3 {
+    font-family: 'Prompt', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .story-card p { font-size: 14px; line-height: 1.7; color: #b0b5c8; }
+  .story-detail {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--accent3);
+    display: none;
+  }
+  .story-card.active .story-detail { display: block; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+  }
+  .timeline-item { position: relative; margin-bottom: 24px; }
+  .timeline-dot {
+    position: absolute;
+    left: -24px; top: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .timeline-dot.red { background: var(--accent2); }
+  .timeline-year {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .timeline-year.red { color: var(--accent2); }
+  .timeline-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-item p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* Compare table */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .compare-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .compare-card.bad { border-color: rgba(224,92,92,0.3); background: rgba(224,92,92,0.05); }
+  .compare-card.good { border-color: rgba(78,201,176,0.3); background: rgba(78,201,176,0.05); }
+  .compare-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .compare-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .compare-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* Big quote */
+  .big-quote {
+    background: linear-gradient(135deg, rgba(245,166,35,0.1), rgba(245,166,35,0.03));
+    border: 1px solid rgba(245,166,35,0.25);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 16px 16px 0;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .big-quote p {
+    font-family: 'Prompt', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .big-quote .author { font-size: 13px; color: var(--accent); margin-top: 10px; font-weight: 400; }
+
+  /* Tag pills */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid;
+  }
+  .tag.danger { background: rgba(224,92,92,0.1); border-color: rgba(224,92,92,0.3); color: #e05c5c; }
+  .tag.warning { background: rgba(245,166,35,0.1); border-color: rgba(245,166,35,0.3); color: var(--accent); }
+  .tag.safe { background: rgba(78,201,176,0.1); border-color: rgba(78,201,176,0.3); color: var(--accent3); }
+  .tag:hover { transform: scale(1.05); }
+
+  .tag-detail {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #b0b5c8;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+  .tag-detail.show { display: block; }
+  .tag-detail strong { color: var(--text); }
+
+  /* Nurse analogy */
+  .analogy-box {
+    background: var(--card);
+    border: 1px solid rgba(78,201,176,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+  .analogy-box .ana-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .ana-icon {
+    width: 44px; height: 44px;
+    background: rgba(78,201,176,0.15);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .analogy-box h3 { font-size: 15px; font-weight: 700; }
+  .analogy-box p { font-size: 14px; line-height: 1.8; color: #b0b5c8; }
+  .analogy-box .highlight {
+    background: rgba(78,201,176,0.08);
+    border-left: 3px solid var(--accent3);
+    padding: 12px 16px;
+    border-radius: 0 10px 10px 0;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--accent3);
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  /* Progress reveal */
+  .reveal-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(245,166,35,0.05));
+    border: 1px solid rgba(245,166,35,0.3);
+    color: var(--accent);
+    padding: 16px;
+    border-radius: 12px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+  }
+  .reveal-btn:hover { background: rgba(245,166,35,0.2); transform: translateY(-1px); }
+
+  /* Final card */
+  .final-card {
+    background: linear-gradient(135deg, #1a1225, #1a1d27);
+    border: 1px solid rgba(245,166,35,0.25);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-top: 24px;
+  }
+  .final-card h2 {
+    font-family: 'Prompt', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .final-card h2 span { color: var(--accent); }
+  .final-card p { font-size: 14px; line-height: 1.8; color: #b0b5c8; margin-bottom: 20px; }
+  .verdict-row { display: flex; gap: 12px; margin-top: 20px; }
+  .verdict-item {
+    flex: 1;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px 12px;
+    border: 1px solid var(--border);
+  }
+  .verdict-item .v-emoji { font-size: 24px; margin-bottom: 8px; }
+  .verdict-item p { font-size: 12px; line-height: 1.6; color: var(--muted); }
+  .verdict-item strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 4px; }
+
+  /* Hidden sections */
+  .hidden-section { display: none; }
+  .hidden-section.show { display: block; animation: fadeUp 0.4s ease; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.3s ease;
+    z-index: 100;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .text-muted { color: var(--muted); font-size: 13px; }
+
+  .pill-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .pill {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .pill.red { background: rgba(224,92,92,0.15); color: #e05c5c; }
+  .pill.green { background: rgba(78,201,176,0.15); color: var(--accent3); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">📖 อ่านร่วมกันเฉพาะ ในครอบครัวเรานะ</div>
+  <h1>โลกเปลี่ยนแล้ว<br><span>แต่ห้องเรียนยังไม่รู้</span></h1>
+  <p class="hero-sub">เรื่องที่อยากให้รู้ก่อนที่ลูกจะเลือกอนาคต — เล่าแบบง่ายๆ ไม่มีศัพท์ยาก</p>
+  <div class="nurse-badge">🏥 เล่าในมุมมองของมี๊ ที่ทำงานในระบบสาธารณสุขไทย เห็นภาพชัด ไม่ต้องไปตีความ ให้ปวดหัว</div>
+  <div class="nav-steps">
+    <div class="step-dot active" onclick="scrollToSection(0)"></div>
+    <div class="step-dot" onclick="scrollToSection(1)"></div>
+    <div class="step-dot" onclick="scrollToSection(2)"></div>
+    <div class="step-dot" onclick="scrollToSection(3)"></div>
+    <div class="step-dot" onclick="scrollToSection(4)"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1: THE HOSPITAL STORY -->
+  <div class="section" id="sec0">
+    <div class="section-num">เรื่องที่ 01</div>
+    <div class="section-title">เริ่มด้วยเรื่องในโรงพยาบาล — เรื่องที่คุ้นเคย</div>
+
+    <div class="analogy-box">
+      <div class="ana-header">
+        <div class="ana-icon">🏥</div>
+        <h3>ลองนึกภาพสถานการณ์นี้</h3>
+      </div>
+      <p>สมมติว่าปี 2010 กระทรวงสาธารณสุขประกาศว่า <strong>"โรงพยาบาลทุกแห่งต้องมีแผนก Wellness & Holistic Care"</strong> เพราะกระแสโลกมาแรงมาก</p>
+      <p style="margin-top:10px">มหาวิทยาลัยพยาบาลทั่วไทยรีบเปิดสาขา "การพยาบาลแบบองค์รวม" ทันที นักศึกษาแห่กันเรียน...</p>
+      <p style="margin-top:10px">แต่ปี 2020 รัฐบาลเปลี่ยน งบตัด แผนกพวกนี้ถูกยุบ โรงพยาบาลต้องการพยาบาล ICU และห้องฉุกเฉินมากกว่า</p>
+      <div class="highlight">
+        💡 คนที่เรียน "Holistic Nursing" 4 ปี จบออกมาแล้วจะทำอะไร?<br>
+        นั่นแหละคือสิ่งที่กำลังเกิดขึ้นกับหลักสูตร ESG / Sustainability ในมหาวิทยาลัยทั่วโลกตอนนี้
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2: WHAT HAPPENED -->
+  <div class="section" id="sec1">
+    <div class="section-num">เรื่องที่ 02</div>
+    <div class="section-title">ความฝันชุดหนึ่ง... ที่โลกเชื่อมาตลอด 10 ปี</div>
+
+    <p class="text-muted" style="margin-bottom:16px">แตะที่แต่ละเรื่องเพื่อดูว่าเกิดอะไรขึ้น</p>
+
+    <div class="story-card" onclick="toggleStory(this)">
+      <span class="story-emoji">🌐</span>
+      <h3>โลกจะรวมเป็นหนึ่ง — ค้าขายเสรี ไร้พรมแดน</h3>
+      <p>ทุกประเทศจะร่วมมือกัน บริษัทข้ามชาติจะเติบโต คนทำงานข้ามพรมแดนได้ง่าย</p>
+      <div class="story-detail">
+        <strong style="color:var(--accent2)">❌ ที่เกิดขึ้นจริง:</strong><br>
+        รัสเซียบุกยูเครน → ยุโรปถูกตัดแก๊ส → ทุกประเทศรู้ทันทีว่า "พึ่งพากันมากเกินไป = อันตราย"<br><br>
+        อเมริกาดึง Factory กลับบ้าน จีนโดนแบน Chip ทุกประเทศเริ่มคิดว่า <strong>"ความมั่นคงของตัวเองสำคัญกว่าการค้าเสรี"</strong>
+      </div>
+    </div>
+
+    <div class="story-card" onclick="toggleStory(this)">
+      <span class="story-emoji">🌱</span>
+      <h3>ESG / Net Zero / Carbon Credit — บริษัทต้องรักโลก</h3>
+      <p>บริษัทใหญ่ต้องวัดค่าคาร์บอน ซื้อ Carbon Credit จ้าง ESG Officer เพื่อรายงานต่อ Investor</p>
+      <div class="story-detail">
+        <strong style="color:var(--accent2)">❌ ที่เกิดขึ้นจริง:</strong><br>
+        ยุโรปหนาวจัด ราคาพลังงานพุ่ง → เปิดโรงถ่านหินที่ปิดไปแล้วกลับมาใหม่<br><br>
+        Carbon Credit หลายตัวถูกพิสูจน์ว่า <strong>"ซื้อขายบนกระดาษ ไม่ได้ช่วยโลกจริง"</strong><br>
+        แผนก ESG ในบริษัทใหญ่ทั่วโลกเริ่มถูกลดขนาดหรือยุบ
+      </div>
+    </div>
+
+    <div class="story-card" onclick="toggleStory(this)">
+      <span class="story-emoji">🏳️‍🌈</span>
+      <h3>DEI / ความหลากหลาย — องค์กรต้องมีแผนก Inclusion</h3>
+      <p>บริษัทต้องจ้าง Diversity Officer มีแผนกความหลากหลาย วัดสัดส่วนพนักงาน</p>
+      <div class="story-detail">
+        <strong style="color:var(--accent2)">❌ ที่เกิดขึ้นจริง:</strong><br>
+        อเมริกายกเลิก DEI ทั้งหมดในหน่วยงานรัฐ Ford, Harley Davidson, John Deere ประกาศยุติโปรแกรม DEI<br><br>
+        <strong>ตำแหน่ง "Diversity Officer"</strong> ถูกยุบเป็นพันตำแหน่งทั่วโลกในปี 2024-2025
+      </div>
+    </div>
+
+    <div class="story-card" onclick="toggleStory(this)">
+      <span class="story-emoji">🤝</span>
+      <h3>NGO / องค์กรระหว่างประเทศ — ทำดีเพื่อโลก มีงานรองรับ</h3>
+      <p>ทำงาน UN, WHO, องค์กรพัฒนา ได้รับ Grant จากต่างชาติ ช่วยชุมชนและสิ่งแวดล้อม</p>
+      <div class="story-detail">
+        <strong style="color:var(--accent2)">❌ ที่เกิดขึ้นจริง:</strong><br>
+        USAID (องค์กรช่วยเหลือของอเมริกา) ถูกตัดงบหนักมากในปี 2025<br><br>
+        องค์กร UN หลายแห่งลด Staff Grant เพื่อ Sustainability ในประเทศกำลังพัฒนาหายไปมาก <strong>NGO ทั่วโลกปิดตัวลงเป็นร้อยองค์กร</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3: THE KEYWORDS -->
+  <div class="section" id="sec2">
+    <div class="section-num">เรื่องที่ 03</div>
+    <div class="section-title">คำศัพท์ที่ได้ยินบ่อย — ตอนนี้อยู่ในสถานะไหน?</div>
+    <p class="text-muted" style="margin-bottom:16px">แตะที่คำเพื่อดูความหมายและสถานะในโลกจริง</p>
+
+    <div class="tag-row">
+      <div class="tag danger" onclick="showTag('esg')">ESG</div>
+      <div class="tag danger" onclick="showTag('netzero')">Net Zero</div>
+      <div class="tag danger" onclick="showTag('carbon')">Carbon Credit</div>
+      <div class="tag danger" onclick="showTag('globalization')">Globalization</div>
+      <div class="tag warning" onclick="showTag('dei')">DEI / LGBTQ+ Policy</div>
+      <div class="tag warning" onclick="showTag('ngo')">NGO / องค์กรสากล</div>
+      <div class="tag warning" onclick="showTag('sustainability')">Sustainability</div>
+      <div class="tag safe" onclick="showTag('energy')">Energy Security</div>
+      <div class="tag safe" onclick="showTag('ai')">AI / Tech</div>
+    </div>
+
+    <div class="tag-detail" id="tag-esg">
+      <strong>🔴 ESG (Environmental, Social, Governance)</strong><br>
+      คือระบบที่บังคับให้บริษัทรายงานว่า "ทำดีต่อโลกและสังคมแค่ไหน" — ฟังดูดี แต่กลายเป็นแค่เอกสารที่ทำเพื่อ Investor ไม่ใช่เพราะเชื่อจริงๆ<br><br>
+      <strong>ตอนนี้:</strong> Investor ใหญ่หลายรายถอนตัวจาก ESG Fund กองทุน ESG ทั่วโลก Outflow (เงินออก) ต่อเนื่อง แผนก ESG ในบริษัทถูกลดขนาด
+    </div>
+
+    <div class="tag-detail" id="tag-netzero">
+      <strong>🔴 Net Zero</strong><br>
+      คือเป้าหมายว่าจะปล่อยคาร์บอนสุทธิเป็นศูนย์ภายในปี 2050 — หลายประเทศเซ็นสัญญาไว้<br><br>
+      <strong>ตอนนี้:</strong> อังกฤษ เยอรมัน และอีกหลายประเทศขยับเป้าออกไป เปิดโรงถ่านหินกลับมา เพราะ "ความอบอุ่น" สำคัญกว่า "ความเขียว" ในโลกจริง
+    </div>
+
+    <div class="tag-detail" id="tag-carbon">
+      <strong>🔴 Carbon Credit</strong><br>
+      คือ "คูปอง" ที่บริษัทซื้อเพื่อบอกว่าตัวเองไม่ทำลายโลก — ฟังดูดี แต่...<br><br>
+      <strong>ตอนนี้:</strong> Carbon Credit หลายตัวถูกพิสูจน์ว่า "ซื้อขายบนกระดาษ" ป่าที่อ้างว่าปลูกไม่มีอยู่จริง หรือถูกโค่นทิ้งแล้ว ตลาดยังมีอยู่แต่ถูกตรวจสอบหนักมากขึ้น
+    </div>
+
+    <div class="tag-detail" id="tag-globalization">
+      <strong>🔴 Globalization (โลกาภิวัตน์)</strong><br>
+      ความเชื่อว่าโลกจะค้าขายเสรี ร่วมมือกันได้ทุกประเทศ บริษัทสามารถผลิตที่ไหนก็ได้ที่ถูกที่สุด<br><br>
+      <strong>ตอนนี้:</strong> ทุกประเทศแข่งกันดึง Factory กลับบ้าน อเมริกาเก็บภาษีนำเข้าสูง จีนโดนแบน Chip โลกแบ่งขั้วชัดเจนขึ้นทุกวัน
+    </div>
+
+    <div class="tag-detail" id="tag-dei">
+      <strong>🟡 DEI / LGBTQ+ Policy ในองค์กร</strong><br>
+      คือนโยบายที่บริษัทต้องจ้างคนหลากหลาย มีแผนก Inclusion Officer วัดสัดส่วนพนักงาน<br><br>
+      <strong>ตอนนี้:</strong> อเมริกายกเลิกทั้งหมดในหน่วยงานรัฐ บริษัทใหญ่หลายแห่งยุติโปรแกรม สิทธิส่วนตัวยังมีอยู่ แต่ "ตำแหน่งงาน DEI Officer" ในองค์กรกำลังหายไป
+    </div>
+
+    <div class="tag-detail" id="tag-ngo">
+      <strong>🟡 NGO / องค์กรระหว่างประเทศ</strong><br>
+      องค์กรไม่แสวงกำไรที่ทำงานช่วยเหลือสังคม สิ่งแวดล้อม ได้รับเงินจาก Grant ต่างชาติ<br><br>
+      <strong>ตอนนี้:</strong> USAID ถูกตัดงบหนัก NGO ทั่วโลกปิดตัวเป็นร้อยแห่ง งานสายนี้ไม่ได้หายหมด แต่แข่งขันสูงมาก เงินเดือนต่ำ และไม่มั่นคงเหมือนเดิม
+    </div>
+
+    <div class="tag-detail" id="tag-sustainability">
+      <strong>🟡 Sustainability (ความยั่งยืน)</strong><br>
+      คำนี้ยังไม่ตาย แต่ความหมายกำลังเปลี่ยน จากเดิมที่หมายถึง "รักษ์โลก" ตอนนี้หมายถึง "ทำธุรกิจให้อยู่รอดได้ในระยะยาว" มากกว่า<br><br>
+      <strong>ความเสี่ยง:</strong> เด็กที่เรียน Sustainability โดยไม่มี Hard Skill (บัญชี, วิศวกรรม, Data) จะกลายเป็นแค่ "คนเขียนรายงาน" ที่ AI แทนได้
+    </div>
+
+    <div class="tag-detail" id="tag-energy">
+      <strong>✅ Energy Security (ความมั่นคงด้านพลังงาน)</strong><br>
+      นี่คือสิ่งที่ทุกประเทศกำลังแข่งกันทำ ไม่ว่าจะเป็น Nuclear, LNG, Solar+Grid, Oil Reserve<br><br>
+      <strong>โอกาส:</strong> วิศวกรพลังงาน, นักวิเคราะห์ตลาดพลังงาน, ผู้เชี่ยวชาญ Grid System ยังเป็นที่ต้องการสูงมากและเงินเดือนดี
+    </div>
+
+    <div class="tag-detail" id="tag-ai">
+      <strong>✅ AI / Tech</strong><br>
+      กำลังเปลี่ยนทุกอุตสาหกรรม รวมถึงสาธารณสุข<br><br>
+      <strong>สำหรับคนทำงานในระบบ:</strong> AI ไม่ได้แทนพยาบาลหรือหมอ แต่แทนงานเอกสาร งานจัดตาราง งานวิเคราะห์ข้อมูล — คนที่ใช้ AI ได้จะก้าวหน้ากว่าคนที่ไม่รู้จัก AI เป็นอย่างมาก
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4: NURSE PARALLEL -->
+  <div class="section" id="sec3">
+    <div class="section-num">เรื่องที่ 04</div>
+    <div class="section-title">เปรียบให้เห็นภาพ — ในระบบสาธารณสุขที่เราคุ้นเคย</div>
+
+    <div class="big-quote">
+      <p>"ถ้าโรงพยาบาลเรียกว่า 'ตลาดแรงงาน' และพยาบาลเรียกว่า 'บัณฑิต' — เราจะเห็นว่าโรงพยาบาลต้องการ ICU มากขึ้น แต่มหาวิทยาลัยยังเปิดสอนสาขาที่โรงพยาบาลไม่ได้ต้องการแล้ว"</p>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <div class="icon">📋</div>
+        <h4>เหมือนเรียน<br>"พยาบาลเอกสาร"</h4>
+        <p>ESG Officer, Sustainability Manager — ทำรายงาน วัดค่า นำเสนอ แต่ไม่มีอำนาจตัดสินใจจริงๆ และ AI ทำแทนได้</p>
+      </div>
+      <div class="compare-card good">
+        <div class="icon">💉</div>
+        <h4>เหมือนเรียน<br>"พยาบาล ICU"</h4>
+        <p>คนที่มีทักษะจริงๆ ที่แทนไม่ได้ — Data Analyst, Engineer, Finance + ภาษา คือคนที่ตลาดยังต้องการ</p>
+      </div>
+    </div>
+
+    <div class="analogy-box" style="margin-top:16px">
+      <div class="ana-header">
+        <div class="ana-icon">💊</div>
+        <h3>อีกมุมหนึ่งที่เข้าใจง่าย</h3>
+      </div>
+      <p>ลองนึกถึงยาที่เคยได้รับการยกย่องว่า "ดีที่สุด" แต่พอมีการศึกษาใหม่ออกมา กลับพบว่าผลข้างเคียงมากกว่าที่คิด — แนวทางการรักษาก็ต้องเปลี่ยน</p>
+      <p style="margin-top:10px">หลักสูตร Sustainability ก็เหมือนกัน — ตอนเปิดสอนมันดูดีมาก แต่พอโลกเปลี่ยน "ยา" ตัวนี้ไม่ได้ผลเหมือนเดิมแล้ว แต่มหาวิทยาลัยยังจ่ายยาเดิมอยู่</p>
+      <div class="highlight">
+        🏥 พยาบาลดีๆ ต้องอัปเดต Clinical Guideline ทุกปี<br>
+        ผู้ปกครองดีๆ ก็ต้องอัปเดต "Guideline ของโลกแรงงาน" เหมือนกัน
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5: BOTTOM LINE -->
+  <div class="section" id="sec4">
+    <div class="section-num">สรุป</div>
+    <div class="section-title">ไม่ได้บอกว่าอย่าเรียน — แต่ต้องรู้ก่อนเลือก</div>
+
+    <div class="final-card">
+      <h2>"เรียน 4 ปี<br>เพื่อทำงานใน<span>โลกที่หายไปแล้ว</span><br>คือราคาที่แพงที่สุด"</h2>
+      <p>สิ่งที่เปลี่ยนไปคือ "โลกที่หลักสูตรออกแบบมา" มันไม่เหมือนเดิมแล้ว ไม่ใช่ความผิดของลูก ไม่ใช่ความผิดของพ่อแม่ แต่เป็นเรื่องที่ต้องรู้ไว้ก่อนตัดสินใจ</p>
+
+      <div class="verdict-row">
+        <div class="verdict-item">
+          <div class="v-emoji">⚠️</div>
+          <strong>หลักสูตรที่ระวัง</strong>
+          <p>Sustainability, ESG, Global Studies, Peace Studies, DEI — ถ้าไม่มี Hard Skill คู่กัน</p>
+        </div>
+        <div class="verdict-item">
+          <div class="v-emoji">✅</div>
+          <strong>ทักษะที่ยังมีคุณค่า</strong>
+          <p>ภาษา + Data, ภาษา + Finance, ภาษา + Tech — Combination คือทางรอด</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="big-quote" style="margin-top:24px">
+      <p>"ลูกเก่งภาษาอังกฤษ — นั่นคือทองคำ คำถามคือจะเอาทองคำไปฝากไว้ที่ไหน?"</p>
+      <div class="author">— สิ่งที่ป๊า คิดอยู่ตลอดเวลา 🙏</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.scrollY / total) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+
+    // Update nav dots
+    const sections = ['sec0','sec1','sec2','sec3','sec4'];
+    const dots = document.querySelectorAll('.step-dot');
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.5 && rect.bottom > 0) {
+        dots.forEach(d => d.classList.remove('active'));
+        dots[i] && dots[i].classList.add('active');
+      }
+    });
+  });
+
+  function scrollToSection(i) {
+    const ids = ['sec0','sec1','sec2','sec3','sec4'];
+    const el = document.getElementById(ids[i]);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleStory(card) {
+    const wasActive = card.classList.contains('active');
+    document.querySelectorAll('.story-card').forEach(c => c.classList.remove('active'));
+    if (!wasActive) card.classList.add('active');
+  }
+
+  let activeTag = null;
+  function showTag(id) {
+    const all = document.querySelectorAll('.tag-detail');
+    all.forEach(d => d.classList.remove('show'));
+    if (activeTag === id) { activeTag = null; return; }
+    const el = document.getElementById('tag-' + id);
+    if (el) el.classList.add('show');
+    activeTag = id;
+  }
+</script>
+</body>
+</html>
