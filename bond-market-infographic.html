@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOND MARKET DECODED | MoyMod</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800;900&family=Noto+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0E16;
+  --bg-2:#0F1422;
+  --card:#141B2E;
+  --card-2:#1A2238;
+  --line:#252E48;
+  --gold:#E8B64C;
+  --gold-dim:#7A6228;
+  --green:#34D399;
+  --red:#F0566B;
+  --blue:#5BA8FF;
+  --orange:#F2A33D;
+  --text:#ECEDF3;
+  --text-dim:#8C93A8;
+  --text-dim2:#5C6480;
+  --font-display:'Kanit',sans-serif;
+  --font-body:'Noto Sans Thai','Kanit',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(232,182,76,0.07), transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(91,168,255,0.06), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(240,86,107,0.05), transparent 40%);
+  pointer-events:none;
+  z-index:0;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+h1,h2,h3{font-family:var(--font-display);}
+.mono{font-family:var(--font-mono);}
+
+/* ---------- progress bar ---------- */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--gold),var(--red));
+  z-index:1000;transition:width .1s linear;
+}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;
+  background:rgba(10,14,22,0.75);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-weight:700;font-size:13px;letter-spacing:.5px;}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.tag{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);letter-spacing:1px;}
+
+/* ---------- ticker ---------- */
+.ticker-wrap{
+  position:relative;width:100%;overflow:hidden;
+  background:var(--bg-2);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:10px 0;white-space:nowrap;
+}
+.ticker{display:inline-flex;animation:tickerMove 28s linear infinite;}
+.ticker span{
+  font-family:var(--font-mono);font-size:13px;color:var(--text-dim);
+  padding:0 22px;border-right:1px solid var(--line);
+}
+.ticker span b{color:var(--gold);}
+@keyframes tickerMove{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+
+/* ---------- hero ---------- */
+.hero{
+  min-height:92vh;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:140px 24px 60px;
+  position:relative;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:12px;color:var(--gold);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;
+  border:1px solid var(--gold-dim);padding:6px 14px;border-radius:30px;
+  display:inline-block;
+}
+.hero h1{
+  font-size:clamp(48px,11vw,108px);font-weight:900;line-height:.95;
+  letter-spacing:-2px;
+  background:linear-gradient(180deg,#fff, #C9CDDB 70%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero h2{
+  font-size:clamp(24px,5vw,40px);font-weight:700;color:var(--gold);
+  margin-top:8px;letter-spacing:-1px;
+}
+.hero p{
+  max-width:560px;margin:24px auto 8px;font-size:18px;color:var(--text-dim);
+}
+.hero .src{font-family:var(--font-mono);font-size:12px;color:var(--text-dim2);margin-top:18px;}
+.scrollcue{
+  margin-top:48px;font-family:var(--font-mono);font-size:12px;color:var(--gold);
+  animation:bob 2s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+/* ---------- sections generic ---------- */
+section{padding:90px 0;border-top:1px solid var(--line);}
+.section-head{margin-bottom:40px;}
+.kicker{
+  font-family:var(--font-mono);font-size:12px;color:var(--blue);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
+}
+.section-head h2{font-size:clamp(28px,5vw,42px);font-weight:800;letter-spacing:-1px;}
+.section-head .lede{color:var(--text-dim);font-size:16px;margin-top:12px;max-width:620px;}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease, transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ---------- pyramid ---------- */
+.pyramid-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center;}
+@media(min-width:760px){.pyramid-grid{grid-template-columns:1.1fr 1fr;}}
+.pyramid-svg-wrap{display:flex;justify-content:center;}
+.pyramid-svg-wrap svg{width:100%;max-width:380px;}
+.player{cursor:pointer;transition:filter .2s ease, opacity .2s ease;}
+.player:hover{filter:brightness(1.2);}
+.player.dim{opacity:.35;}
+.ptext{font-family:var(--font-display);font-weight:700;fill:#0A0E16;font-size:15px;}
+.ptext-small{font-family:var(--font-mono);font-weight:600;fill:#0A0E16;font-size:11px;}
+
+.info-panel{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:24px 26px;min-height:160px;
+}
+.info-panel .ip-label{font-family:var(--font-mono);font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:8px;}
+.info-panel .ip-title{font-family:var(--font-display);font-weight:800;font-size:22px;margin-bottom:10px;}
+.info-panel .ip-body{color:var(--text-dim);font-size:15px;}
+.layer-tabs{display:flex;gap:8px;margin-top:18px;}
+.layer-tabs button{
+  flex:1;background:var(--card-2);border:1px solid var(--line);color:var(--text-dim);
+  font-family:var(--font-mono);font-size:11px;padding:8px 6px;border-radius:8px;cursor:pointer;
+  transition:all .2s ease;
+}
+.layer-tabs button.active{background:var(--gold);color:#0A0E16;border-color:var(--gold);font-weight:700;}
+
+/* ---------- grid bullets ---------- */
+.bullet-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(min-width:600px){.bullet-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
+.bullet-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 16px;text-align:center;
+}
+.bullet-card .ico{font-size:30px;margin-bottom:10px;display:block;}
+.bullet-card .txt{font-size:14px;font-weight:600;color:var(--text);}
+
+/* ---------- flow loop ---------- */
+.flow{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:700px){.flow{grid-template-columns:1fr 1fr;}}
+.flow-step{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+  display:flex;gap:14px;align-items:flex-start;position:relative;
+}
+.flow-step .num{
+  font-family:var(--font-mono);font-weight:700;color:var(--gold);font-size:13px;
+  background:var(--card-2);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.flow-step .ftxt{font-size:14.5px;color:var(--text-dim);}
+.flow-step .ftxt b{color:var(--text);}
+.callout{
+  margin-top:20px;background:rgba(232,182,76,0.08);border:1px solid var(--gold-dim);
+  border-radius:12px;padding:14px 18px;font-size:14px;color:var(--gold);
+}
+
+/* ---------- seesaw ---------- */
+.seesaw-box{display:flex;flex-direction:column;align-items:center;gap:24px;}
+.seesaw-svg{width:100%;max-width:480px;}
+.beam{transform-origin:250px 150px;transition:transform .6s cubic-bezier(.34,1.56,.64,1);}
+.toggle-row{display:flex;gap:12px;}
+.toggle-btn{
+  font-family:var(--font-mono);font-weight:700;font-size:14px;padding:12px 22px;
+  border-radius:30px;border:1px solid var(--line);background:var(--card);color:var(--text-dim);cursor:pointer;
+  transition:all .2s ease;
+}
+.toggle-btn.active.up{background:var(--red);color:#fff;border-color:var(--red);}
+.toggle-btn.active.down{background:var(--green);color:#0A0E16;border-color:var(--green);}
+.seesaw-numbers{display:flex;gap:30px;font-family:var(--font-mono);}
+.seesaw-numbers .nblock{text-align:center;}
+.seesaw-numbers .nlabel{font-size:11px;color:var(--text-dim2);letter-spacing:1px;}
+.seesaw-numbers .nval{font-size:28px;font-weight:700;transition:color .3s ease;}
+
+/* ---------- curve & maturity ---------- */
+.timeline{display:flex;justify-content:space-between;margin:10px 0 30px;flex-wrap:wrap;gap:8px;}
+.tl-item{text-align:center;flex:1;min-width:50px;}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);margin:0 auto 8px;}
+.tl-label{font-family:var(--font-mono);font-size:12px;color:var(--text-dim);}
+.curve-svg-wrap{display:flex;justify-content:center;margin:20px 0;}
+.curve-svg-wrap svg{width:100%;max-width:520px;}
+.curve-toggle{display:flex;justify-content:center;gap:10px;margin-bottom:6px;}
+.path-normal,.path-inverted{transition:opacity .4s ease;}
+
+.spread-cards{display:grid;grid-template-columns:1fr;gap:14px;margin-top:30px;}
+@media(min-width:700px){.spread-cards{grid-template-columns:1fr 1fr 1fr;}}
+.spread-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;}
+.spread-card .sc-title{font-family:var(--font-mono);font-weight:700;color:var(--blue);font-size:15px;margin-bottom:6px;}
+.spread-card .sc-desc{font-size:13.5px;color:var(--text-dim);}
+
+.steepen-tabs{display:flex;gap:10px;margin:34px 0 16px;}
+.st-btn{
+  flex:1;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+  color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--font-display);font-size:15px;
+  transition:all .2s ease;
+}
+.st-btn.bull.active{background:rgba(52,211,153,0.15);border-color:var(--green);color:var(--green);}
+.st-btn.bear.active{background:rgba(240,86,107,0.15);border-color:var(--red);color:var(--red);}
+.steepen-panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;font-size:14.5px;color:var(--text-dim);min-height:90px;}
+
+/* ---------- dashboard gauges ---------- */
+.gauge-grid{display:grid;grid-template-columns:1fr;gap:18px;}
+@media(min-width:700px){.gauge-grid{grid-template-columns:1fr 1fr 1fr;}}
+.gauge-card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.gauge-card .gtop{font-family:var(--font-mono);font-size:12px;color:var(--text-dim2);letter-spacing:1px;}
+.gauge-card .gname{font-family:var(--font-display);font-weight:800;font-size:24px;margin:6px 0 10px;}
+.gauge-card .gdesc{font-size:13.5px;color:var(--text-dim);}
+.gauge-card .gbar{height:6px;border-radius:6px;background:var(--card-2);margin-top:16px;overflow:hidden;}
+.gauge-card .gfill{height:100%;border-radius:6px;}
+.g-yield .gfill{width:78%;background:var(--orange);}
+.g-dxy .gfill{width:55%;background:var(--blue);}
+.g-vix .gfill{width:38%;background:var(--green);}
+
+/* ---------- reasons tabs ---------- */
+.reason-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.rt-btn{
+  padding:10px 18px;border-radius:30px;border:1px solid var(--line);background:var(--card);
+  color:var(--text-dim);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s ease;
+}
+.rt-btn.active.healthy{background:rgba(52,211,153,0.15);border-color:var(--green);color:var(--green);}
+.rt-btn.active.fiscal{background:rgba(240,86,107,0.15);border-color:var(--red);color:var(--red);}
+.rt-btn.active.liquidity{background:rgba(242,163,61,0.15);border-color:var(--orange);color:var(--orange);}
+.reason-panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;min-height:110px;}
+.reason-panel .rp-title{font-family:var(--font-display);font-weight:700;font-size:18px;margin-bottom:8px;}
+.reason-panel .rp-body{color:var(--text-dim);font-size:14.5px;}
+
+/* ---------- real estate ---------- */
+.compare-bars{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+.cbar-row{display:flex;align-items:center;gap:14px;}
+.cbar-label{width:120px;font-family:var(--font-mono);font-size:13px;color:var(--text-dim);flex-shrink:0;}
+.cbar-track{flex:1;background:var(--card-2);border-radius:8px;height:26px;position:relative;overflow:hidden;}
+.cbar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:10px;font-family:var(--font-mono);font-size:12px;font-weight:700;color:#0A0E16;}
+.cbar-fill.buy{width:100%;background:var(--red);}
+.cbar-fill.rent{width:62%;background:var(--green);}
+
+/* ---------- yen carry ---------- */
+.carry-steps{display:flex;flex-direction:column;gap:10px;}
+.carry-step{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;gap:14px;align-items:center;
+}
+.carry-step .cnum{
+  font-family:var(--font-mono);font-weight:800;color:#0A0E16;background:var(--gold);
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;
+}
+.carry-step .cwarn .cnum{background:var(--red);}
+.carry-step p{font-size:14.5px;color:var(--text-dim);}
+.carry-step p b{color:var(--text);}
+
+.jpy-chart-wrap{display:flex;justify-content:center;margin:34px 0 10px;}
+.jpy-chart-wrap svg{width:100%;max-width:560px;}
+.crisis-box{
+  background:rgba(240,86,107,0.08);border:1px solid var(--red);border-radius:12px;padding:16px 18px;
+  margin-top:18px;font-size:14px;color:var(--text);
+}
+.crisis-box b{color:var(--red);}
+
+.scenario-tabs{display:flex;gap:10px;margin-top:30px;}
+.sc-btn{
+  flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+  color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--font-mono);font-size:13px;
+  transition:all .2s ease;
+}
+.sc-btn.active{background:var(--card-2);border-color:var(--gold);color:var(--gold);}
+.scenario-panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:14px;font-size:14.5px;color:var(--text-dim);min-height:90px;}
+
+/* ---------- checklist ---------- */
+.checklist{display:flex;flex-direction:column;gap:12px;}
+.check-item{
+  display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .2s ease;
+}
+.check-item.checked{border-color:var(--green);background:rgba(52,211,153,0.06);}
+.box{
+  width:22px;height:22px;border-radius:6px;border:2px solid var(--text-dim2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s ease;
+}
+.check-item.checked .box{background:var(--green);border-color:var(--green);color:#0A0E16;}
+.check-item .ctxt{font-size:15px;color:var(--text);}
+.check-item.checked .ctxt{color:var(--text-dim);text-decoration:line-through;}
+.counter{
+  margin-top:18px;text-align:center;font-family:var(--font-mono);font-size:13px;color:var(--gold);
+  letter-spacing:1px;
+}
+
+/* ---------- footer ---------- */
+footer{padding:70px 0 60px;text-align:center;border-top:1px solid var(--line);}
+footer .hash{font-family:var(--font-mono);font-weight:800;font-size:20px;color:var(--gold);letter-spacing:1px;}
+footer .src2{margin-top:14px;font-size:13px;color:var(--text-dim);}
+footer .tag2{margin-top:6px;font-size:13px;color:var(--text-dim2);}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div class="topbar">
+  <div class="brand"><span class="dot"></span>MOYMOD</div>
+  <div class="tag">#NoNoise #MoyMod</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">🎙️ The Trading Lab EP.11 · ถอดรหัส</div>
+  <h1>BOND<br>MARKET</h1>
+  <h2>ฐานรากที่ค้ำทั้งโลกการเงิน 🧱</h2>
+  <p>ก่อนเทรด BTC, ETH หรือหุ้นเทค ต้องรู้จักตลาดนี้ก่อน เพราะทุกอย่างเริ่มที่นี่</p>
+  <div class="src">สรุปจากบทสัมภาษณ์พี่กิม (กาเลเนาะ) อดีตทีม PIMCO</div>
+  <div class="scrollcue">เลื่อนลงดูพีระมิดการเงิน ⬇️</div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker mono" id="ticker">
+    <span>10Y YIELD <b>▲</b></span><span>DXY <b>99.xx</b></span><span>VIX</span><span>MOVE</span><span>USD/JPY <b>150.58</b></span><span>CURVE 10-2</span><span>BOJ</span><span>FED</span>
+    <span>10Y YIELD <b>▲</b></span><span>DXY <b>99.xx</b></span><span>VIX</span><span>MOVE</span><span>USD/JPY <b>150.58</b></span><span>CURVE 10-2</span><span>BOJ</span><span>FED</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 1: PYRAMID -->
+<section class="reveal" id="pyramid-sec">
+  <div class="section-head">
+    <div class="kicker">01 · โครงสร้างใหญ่</div>
+    <h2>🔺 พีระมิดการเงินโลก</h2>
+    <p class="lede">ลองนึกภาพสามเหลี่ยม: พันธบัตรคือฐานราก หุ้นคือลำตัว คริปโตคือปลายยอดแหลม กดที่ชั้นไหนก็ได้ ↓</p>
+  </div>
+
+  <div class="pyramid-grid">
+    <div class="pyramid-svg-wrap">
+      <svg viewBox="0 0 500 400">
+        <polygon class="player" data-layer="bonds" points="90,308 410,308 450,380 50,380" fill="var(--gold)"/>
+        <polygon class="player" data-layer="stocks" points="140,218 360,218 410,308 90,308" fill="var(--blue)"/>
+        <polygon class="player" data-layer="crypto" points="250,20 140,218 360,218" fill="var(--green)"/>
+        <text x="250" y="120" text-anchor="middle" class="ptext" style="fill:#0A0E16;font-size:13px;">คริปโต</text>
+        <text x="250" y="270" text-anchor="middle" class="ptext">ตลาดหุ้น</text>
+        <text x="250" y="350" text-anchor="middle" class="ptext" style="font-size:17px;">ตลาดพันธบัตร</text>
+      </svg>
+    </div>
+    <div>
+      <div class="info-panel" id="pyramid-info">
+        <div class="ip-label" id="ip-label">🏛️ BOND MARKET</div>
+        <div class="ip-title" id="ip-title">ใหญ่ที่สุดในโลก</div>
+        <div class="ip-body" id="ip-body">คือ "ต้นทุนการเงิน" ของทุกอย่าง — ใครจะกู้ได้หรือกู้ไม่ได้ ธุรกิจไหนรอดหรือไม่รอด รัฐบาลไหนขาดดุล/เกินดุล ทุกอย่างอยู่ในตลาดนี้หมด</div>
+      </div>
+      <div class="layer-tabs">
+        <button data-layer="bonds" class="active">🏛️ BONDS</button>
+        <button data-layer="stocks">📈 STOCKS</button>
+        <button data-layer="crypto">🌐 CRYPTO</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: WHY CARE -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">02 · ทำไมต้องสนใจ</div>
+    <h2>⚡ มันกำหนดทุกอย่าง</h2>
+  </div>
+  <div class="bullet-grid">
+    <div class="bullet-card"><span class="ico">💰</span><span class="txt">ใครกู้เงินได้ถูก/แพง</span></div>
+    <div class="bullet-card"><span class="ico">🏚️</span><span class="txt">ธุรกิจไหนรอด-ไม่รอด</span></div>
+    <div class="bullet-card"><span class="ico">🏦</span><span class="txt">รัฐบาลขาดดุล/เกินดุล</span></div>
+    <div class="bullet-card"><span class="ico">📊</span><span class="txt">ทิศทางหุ้น-คริปโตทั้งตลาด</span></div>
+  </div>
+</section>
+
+<!-- SECTION 3: FLOW -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">03 · เงินไหลไปไหน</div>
+    <h2>🔁 วงจรขาดดุล-เกินดุล</h2>
+    <p class="lede">ทำไมจีน ญี่ปุ่น ไทย ถือพันธบัตรสหรัฐกันเต็มไปหมด</p>
+  </div>
+  <div class="flow">
+    <div class="flow-step"><div class="num">1</div><div class="ftxt">🇺🇸 <b>สหรัฐขาดดุลการค้า</b> — ซื้อของจากจีน ญี่ปุ่น ไทย ด้วยเงินดอลลาร์</div></div>
+    <div class="flow-step"><div class="num">2</div><div class="ftxt">💵 <b>ประเทศที่เกินดุล</b> ถือดอลลาร์ส่วนเกินไว้ เงินอยู่เฉยๆไม่ได้ ต้องไหลไปทางใดทางหนึ่ง</div></div>
+    <div class="flow-step"><div class="num">3</div><div class="ftxt">🧾 ทางที่ <b>ปลอดภัยที่สุด</b> = ซื้อพันธบัตรรัฐบาลสหรัฐ</div></div>
+    <div class="flow-step"><div class="num">4</div><div class="ftxt">🔄 สหรัฐ <b>ได้เงินกู้ราคาถูก</b> วนกลับมาที่เดิม</div></div>
+  </div>
+  <div class="callout">💡 ขาดดุล ≠ เรื่องแย่เสมอ มันคือการ "ใช้ทรัพยากรของประเทศอื่น" แทนทรัพยากรตัวเอง</div>
+</section>
+
+<!-- SECTION 4: SEESAW -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">04 · กฎเหล็กที่ต้องจำ</div>
+    <h2>⚖️ ไม้กระดก: ราคา VS ดอกเบี้ย</h2>
+    <p class="lede">ราคาพันธบัตร กับ Yield (ดอกเบี้ย) วิ่งสวนทางกันเสมอ — กดปุ่มลองดู</p>
+  </div>
+  <div class="seesaw-box">
+    <svg class="seesaw-svg" viewBox="0 0 500 230">
+      <polygon points="250,150 235,200 265,200" fill="var(--line)"/>
+      <g class="beam" id="beam">
+        <rect x="60" y="140" width="380" height="14" rx="7" fill="var(--card-2)" stroke="var(--line)"/>
+        <circle cx="90" cy="147" r="34" fill="var(--green)" />
+        <text x="90" y="151" text-anchor="middle" class="ptext" style="font-size:13px;">ราคา</text>
+        <circle cx="410" cy="147" r="34" fill="var(--red)"/>
+        <text x="410" y="151" text-anchor="middle" class="ptext" style="font-size:12px;">Yield</text>
+      </g>
+    </svg>
+    <div class="toggle-row">
+      <button class="toggle-btn up" id="btn-up">ดอกเบี้ยขึ้น 📈</button>
+      <button class="toggle-btn down active" id="btn-down">ดอกเบี้ยลง 📉</button>
+    </div>
+    <div class="seesaw-numbers">
+      <div class="nblock"><div class="nlabel">ราคาที่ซื้อ</div><div class="nval" id="price-start">100</div></div>
+      <div class="nblock"><div class="nlabel">ราคาตอนนี้</div><div class="nval" id="price-now" style="color:var(--green);">103</div></div>
+    </div>
+    <p style="color:var(--text-dim);font-size:14px;text-align:center;max-width:480px;">จำสูตรนี้: <b style="color:var(--text);">ดอกเบี้ยขึ้น → ราคาร่วง</b> (ซื้อ 100 อาจเหลือ 96) ตรงข้ามกันเป๊ะ เหมือนไม้กระดก 🎢</p>
+  </div>
+</section>
+
+<!-- SECTION 5: CURVE -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">05 · อายุพันธบัตร</div>
+    <h2>⛰️ Yield Curve = เดินขึ้นภูเขา</h2>
+    <p class="lede">พันธบัตรมีหลายอายุ ยิ่งยาวยิ่งสะท้อนความไม่แน่นอนของเศรษฐกิจมากขึ้น</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">1Y</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">2Y</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">5Y</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">10Y</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">20Y</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-label">30Y</div></div>
+  </div>
+
+  <div class="curve-toggle">
+    <button class="toggle-btn active" id="curve-normal" style="border-color:var(--green);color:var(--green);">เคิร์ฟปกติ ⛰️</button>
+    <button class="toggle-btn" id="curve-inv">เคิร์ฟกลับหัว 🔻</button>
+  </div>
+  <div class="curve-svg-wrap">
+    <svg viewBox="0 0 520 220">
+      <line x1="40" y1="190" x2="500" y2="190" stroke="var(--line)" stroke-width="1"/>
+      <path id="path-normal" class="path-normal" d="M40,170 L150,150 L260,120 L370,80 L480,40" fill="none" stroke="var(--green)" stroke-width="4" stroke-linecap="round"/>
+      <path id="path-inverted" class="path-inverted" d="M40,60 L150,75 L260,110 L370,140 L480,150" fill="none" stroke="var(--red)" stroke-width="4" stroke-linecap="round" style="display:none;"/>
+      <text x="40" y="210" class="ptext-small" fill="var(--text-dim)" style="fill:var(--text-dim);">สั้น</text>
+      <text x="460" y="210" class="ptext-small" style="fill:var(--text-dim);">ยาว</text>
+    </svg>
+  </div>
+  <p id="curve-caption" style="text-align:center;color:var(--text-dim);font-size:14px;">ปกติ ดอกเบี้ยตัวยาวควรสูงกว่าตัวสั้น — สะท้อนเงินเฟ้อ + ความไม่แน่นอนระยะยาว</p>
+
+  <div class="spread-cards">
+    <div class="spread-card"><div class="sc-title">10Y − 2Y</div><div class="sc-desc">สเปรดหลักที่สายมาโครเช็คทุกวัน เทียบดอกเบี้ยยาวกับเงินกู้สั้น</div></div>
+    <div class="spread-card"><div class="sc-title">30Y − 5Y</div><div class="sc-desc">ดูว่าตลาดอสังหา/หนี้ระยะยาวเสี่ยงแค่ไหน</div></div>
+    <div class="spread-card"><div class="sc-title">10Y − 3M</div><div class="sc-desc">เทียบกับนโยบายดอกเบี้ยปัจจุบันของเฟดโดยตรง</div></div>
+  </div>
+
+  <div class="steepen-tabs">
+    <button class="st-btn bull active" id="bull-btn">🐂 Bull Steepening</button>
+    <button class="st-btn bear" id="bear-btn">🐻 Bear Steepening</button>
+  </div>
+  <div class="steepen-panel" id="steepen-panel">
+    เกิดเมื่อตลาดเริ่มคิดว่า "เฟดต้องลดดอกเบี้ย" เพราะเศรษฐกิจไม่ดี — ดอกเบี้ยระยะสั้นลงเร็วกว่าระยะยาว เคิร์ฟชันขึ้น (เป็นสัญญาณ "เฟดพิวอท" ไม่ใช่เศรษฐกิจดีเสมอไป)
+  </div>
+</section>
+
+<!-- SECTION 6: BIG 3 -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">06 · เช็คทุกวัน</div>
+    <h2>🎯 3 ตัวที่สายเทรดต้องดู</h2>
+    <p class="lede">ก่อนเทรดหุ้นเทค คริปโต หรือ Bitcoin ใดๆ — เช็ค 3 อย่างนี้ก่อนเสมอ</p>
+  </div>
+  <div class="gauge-grid">
+    <div class="gauge-card g-yield">
+      <div class="gtop">01</div>
+      <div class="gname">10Y Yield 🇺🇸</div>
+      <div class="gdesc">ถ้าเด้งเกิน 4.5% ตลาดจะกังวลเฟดต้องขึ้นดอกเบี้ย — เทรดกันที่ "ความคาดหวัง" ไม่ใช่ปัจจุบัน</div>
+      <div class="gbar"><div class="gfill"></div></div>
+    </div>
+    <div class="gauge-card g-dxy">
+      <div class="gtop">02</div>
+      <div class="gname">DXY 💵</div>
+      <div class="gdesc">ดัชนีดอลลาร์ — แข็งหรืออ่อน กระทบมูลค่าหุ้นและกำไรบริษัททั่วโลกโดยตรง</div>
+      <div class="gbar"><div class="gfill"></div></div>
+    </div>
+    <div class="gauge-card g-vix">
+      <div class="gtop">03</div>
+      <div class="gname">VIX & MOVE 🌊</div>
+      <div class="gdesc">VIX = ความผันผวนหุ้น, MOVE = ความผันผวนบอนด์ — สูงขึ้น = ตลาดเริ่มไม่นิ่ง</div>
+      <div class="gbar"><div class="gfill"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: WHY YIELDS RISE -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">07 · สาเหตุ</div>
+    <h2>🤔 ทำไม Yield ขึ้น? (ไม่ใช่เหตุผลเดียว)</h2>
+    <p class="lede">ยิวขึ้นแบบเดียวกัน แต่คนละสาเหตุ ผลกระทบต่อดอลลาร์ก็ต่างกัน</p>
+  </div>
+  <div class="reason-tabs">
+    <button class="rt-btn healthy active" data-r="healthy">✅ เศรษฐกิจดี</button>
+    <button class="rt-btn fiscal" data-r="fiscal">⚠️ กังวลขาดดุล</button>
+    <button class="rt-btn liquidity" data-r="liquidity">🌊 Liquidity Stress</button>
+  </div>
+  <div class="reason-panel">
+    <div class="rp-title" id="reason-title">เศรษฐกิจดี (Healthy)</div>
+    <div class="rp-body" id="reason-body">GDP โต ตัวเลขจ้างงานดี ดอกเบี้ยขึ้นตามธรรมชาติเพราะเศรษฐกิจร้อนแรง — เป็นสัญญาณบวก ดอลลาร์มักแข็งตาม</div>
+  </div>
+</section>
+
+<!-- SECTION 8: REAL ESTATE -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">08 · ผลกระทบจริง</div>
+    <h2>🏠 พันธบัตร 30 ปี = หัวใจตลาดบ้าน</h2>
+    <p class="lede">บ้านในสหรัฐกู้แบบ Fixed Rate ผูกกับ 30Y Yield ตรงๆ — ดอกพุ่ง คนไม่กล้ากู้</p>
+  </div>
+  <div class="compare-bars">
+    <div class="cbar-row"><div class="cbar-label">ผ่อนบ้าน/เดือน</div><div class="cbar-track"><div class="cbar-fill buy">~$4,000</div></div></div>
+    <div class="cbar-row"><div class="cbar-label">เช่า/เดือน</div><div class="cbar-track"><div class="cbar-fill rent">~$2,500</div></div></div>
+  </div>
+  <div class="callout" style="margin-top:24px;">💡 เรท 30Y พุ่งถึง ~6.75-7% คนเลือก "เช่าถูกกว่าซื้อ" — พอคนไม่ซื้อบ้าน กระทบจ้างงาน-ระบบไฟฟ้า-เศรษฐกิจทั้งระบบ</div>
+</section>
+
+<!-- SECTION 9: YEN CARRY -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">09 · เกมที่ทุกคนเล่น</div>
+    <h2>🇯🇵 Yen Carry Trade</h2>
+    <p class="lede">กู้เงินถูก เก็งกำไรทั่วโลก แต่เดิมพันจริงคือ "ค่าเงิน" ไม่ใช่ดอกเบี้ย</p>
+  </div>
+  <div class="carry-steps">
+    <div class="carry-step"><div class="cnum">1</div><p>กู้เงินเยนดอกเบี้ยต่ำมาก <b>(~0.5%)</b></p></div>
+    <div class="carry-step"><div class="cnum">2</div><p>แปลงเป็นดอลลาร์ ไปซื้อพันธบัตรสหรัฐ/หุ้นเทค/คริปโต ดอกเบี้ยสูงกว่า <b>(~4.5-4.7%)</b></p></div>
+    <div class="carry-step"><div class="cnum">3</div><p>กินส่วนต่าง <b>Carry Spread ~3-4%</b> ฟังดูฟรี... แต่ไม่ใช่</p></div>
+    <div class="carry-step cwarn"><div class="cnum">⚠️</div><p><b>เดิมพันจริงคือค่าเงินเยน</b> ถ้าเยนแข็งขึ้นกะทันหัน พอร์ตที่ Leverage หนักๆ จะพังไว — โดน Margin Call ทันที</p></div>
+  </div>
+
+  <div class="jpy-chart-wrap">
+    <svg viewBox="0 0 540 240">
+      <line x1="60" y1="20" x2="60" y2="210" stroke="var(--line)"/>
+      <rect x="60" y="58" width="440" height="36" fill="rgba(232,182,76,0.15)"/>
+      <text x="510" y="50" class="ptext-small" style="fill:var(--gold);font-size:11px;">160</text>
+      <text x="510" y="100" class="ptext-small" style="fill:var(--gold);font-size:11px;">155</text>
+      <line x1="60" y1="76" x2="500" y2="76" stroke="var(--gold)" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="60" y1="130" x2="500" y2="130" stroke="var(--blue)" stroke-width="2"/>
+      <circle cx="475" cy="130" r="5" fill="var(--blue)"/>
+      <text x="380" y="122" class="ptext-small" style="fill:var(--blue);font-size:12px;">ปัจจุบัน ~150.58</text>
+      <text x="160" y="76" class="ptext-small" style="fill:var(--gold);font-size:12px;" dy="-8">โซนที่ BOJ พอใจ (155-160)</text>
+      <line x1="60" y1="190" x2="500" y2="190" stroke="var(--red)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="64" y="206" class="ptext-small" style="fill:var(--red);font-size:11px;">2024: 161 ➝ 139 ใน 2-3 สัปดาห์</text>
+    </svg>
+  </div>
+  <div class="crisis-box">💥 <b>สิงหา 2024:</b> เยนแข็งจาก 161 → 139 (ราว -14%) ภายในไม่กี่สัปดาห์ Carry Trade ทั่วตลาดโดน Margin Call ลูกโซ่ — บทเรียนว่าทำไม USD/JPY คือ "เครื่องวัดสุขภาพ" ของแครี่เทรดทั้งระบบ</div>
+
+  <div class="scenario-tabs">
+    <button class="sc-btn active" id="sc-break">ถ้าหลุด 155 ↓</button>
+    <button class="sc-btn" id="sc-burst">ถ้าทะลุ 160 ↑</button>
+  </div>
+  <div class="scenario-panel" id="scenario-panel">
+    🔴 เยนแข็งขึ้นเร็ว → แครี่เทรดเริ่ม Unwind → คนที่กู้เยนไปซื้อหุ้น/คริปโตต้องเทขายสินทรัพย์หาแคชคืนเยน → ยิ่งซื้อเยนคืน เยนยิ่งแข็ง → ลูกโซ่กดดันสินทรัพย์เสี่ยงทั่วโลก
+  </div>
+</section>
+
+<!-- SECTION 10: CHECKLIST -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="kicker">10 · สรุปก่อนเทรด</div>
+    <h2>✅ เช็คลิสต์ประจำวัน</h2>
+    <p class="lede">กดติ๊กเช็คทุกครั้งก่อนตัดสินใจเทรดหรือลงทุน</p>
+  </div>
+  <div class="checklist" id="checklist">
+    <div class="check-item"><div class="box"></div><div class="ctxt">เช็ค 10Y Yield — เด้งเกิน 4.5% ยัง?</div></div>
+    <div class="check-item"><div class="box"></div><div class="ctxt">เช็ค DXY — ดอลลาร์แข็งหรืออ่อน?</div></div>
+    <div class="check-item"><div class="box"></div><div class="ctxt">เช็ค VIX/MOVE — ความผันผวนเริ่มสูงมั้ย?</div></div>
+    <div class="check-item"><div class="box"></div><div class="ctxt">เช็ค USD/JPY — ยังอยู่โซน 155-160 มั้ย?</div></div>
+  </div>
+  <div class="counter" id="counter">0/4 เช็คแล้ว</div>
+</section>
+
+</div>
+
+<footer>
+  <div class="hash">#NoNoise #MoyMod</div>
+  <div class="src2">สรุปจากบทสัมภาษณ์ The Trading Lab EP.11 ft. พี่กิม (กาเลเนาะ) อดีตทีม PIMCO</div>
+  <div class="tag2">ทำขึ้นเพื่อนักลงทุนไทยที่อยากกรอง Noise แล้วเข้าใจภาพ Macro จริงๆ 🎯</div>
+</footer>
+
+<script>
+// progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.12});
+reveals.forEach(r => obs.observe(r));
+
+// pyramid interaction
+const layerData = {
+  bonds: {label:'🏛️ BOND MARKET', title:'ใหญ่ที่สุดในโลก', body:'คือ "ต้นทุนการเงิน" ของทุกอย่าง — ใครจะกู้ได้หรือกู้ไม่ได้ ธุรกิจไหนรอดหรือไม่รอด รัฐบาลไหนขาดดุล/เกินดุล ทุกอย่างอยู่ในตลาดนี้หมด'},
+  stocks: {label:'📈 STOCK MARKET', title:'~$110 ล้านล้าน$ ทั่วโลก', body:'ใหญ่กว่าคริปโตมาก แต่ก็ยังเป็นแค่ "องค์ประกอบส่วนหนึ่ง" ของระบบการเงิน ไม่ใช่ฐานหลักของระบบ'},
+  crypto: {label:'🌐 CRYPTO', title:'~$2 ล้านล้าน$ เท่านั้น', body:'เล็กสุดในระบบการเงินโลก เป็นปลายยอดแหลมของพีระมิด แต่ผันผวนแรงสุด เพราะฐานเงินเล็กที่สุด'}
+};
+document.querySelectorAll('.player, .layer-tabs button').forEach(el => {
+  el.addEventListener('click', () => {
+    const layer = el.dataset.layer;
+    document.querySelectorAll('.layer-tabs button').forEach(b => b.classList.toggle('active', b.dataset.layer===layer));
+    document.querySelectorAll('.player').forEach(p => p.classList.toggle('dim', p.dataset.layer!==layer));
+    document.getElementById('ip-label').textContent = layerData[layer].label;
+    document.getElementById('ip-title').textContent = layerData[layer].title;
+    document.getElementById('ip-body').textContent = layerData[layer].body;
+  });
+});
+
+// seesaw
+const beam = document.getElementById('beam');
+const btnUp = document.getElementById('btn-up');
+const btnDown = document.getElementById('btn-down');
+const priceNow = document.getElementById('price-now');
+function setYield(up){
+  btnUp.classList.toggle('active', up); btnUp.classList.toggle('up', true);
+  btnDown.classList.toggle('active', !up);
+  beam.style.transform = up ? 'rotate(-9deg)' : 'rotate(9deg)';
+  priceNow.textContent = up ? '96' : '103';
+  priceNow.style.color = up ? 'var(--red)' : 'var(--green)';
+}
+btnUp.addEventListener('click', () => setYield(true));
+btnDown.addEventListener('click', () => setYield(false));
+
+// curve toggle
+const curveNormalBtn = document.getElementById('curve-normal');
+const curveInvBtn = document.getElementById('curve-inv');
+const pathNormal = document.getElementById('path-normal');
+const pathInverted = document.getElementById('path-inverted');
+const curveCaption = document.getElementById('curve-caption');
+curveNormalBtn.addEventListener('click', () => {
+  curveNormalBtn.classList.add('active'); curveInvBtn.classList.remove('active');
+  curveNormalBtn.style.borderColor='var(--green)'; curveNormalBtn.style.color='var(--green)';
+  curveInvBtn.style.borderColor=''; curveInvBtn.style.color='';
+  pathNormal.style.display='block'; pathInverted.style.display='none';
+  curveCaption.textContent = 'ปกติ ดอกเบี้ยตัวยาวควรสูงกว่าตัวสั้น — สะท้อนเงินเฟ้อ + ความไม่แน่นอนระยะยาว';
+});
+curveInvBtn.addEventListener('click', () => {
+  curveInvBtn.classList.add('active'); curveNormalBtn.classList.remove('active');
+  curveInvBtn.style.borderColor='var(--red)'; curveInvBtn.style.color='var(--red)';
+  curveNormalBtn.style.borderColor=''; curveNormalBtn.style.color='';
+  pathNormal.style.display='none'; pathInverted.style.display='block';
+  curveCaption.textContent = 'กลับหัว = ตลาดกลัว Recession ระยะสั้นดอกเบี้ยสูงกว่าระยะยาว สัญญาณเตือนภัยคลาสสิก';
+});
+
+// bull/bear steepening
+const bullBtn = document.getElementById('bull-btn');
+const bearBtn = document.getElementById('bear-btn');
+const steepenPanel = document.getElementById('steepen-panel');
+bullBtn.addEventListener('click', () => {
+  bullBtn.classList.add('active'); bearBtn.classList.remove('active');
+  steepenPanel.textContent = 'เกิดเมื่อตลาดเริ่มคิดว่า "เฟดต้องลดดอกเบี้ย" เพราะเศรษฐกิจไม่ดี — ดอกเบี้ยระยะสั้นลงเร็วกว่าระยะยาว เคิร์ฟชันขึ้น (สัญญาณ "เฟดพิวอท" ไม่ได้แปลว่าเศรษฐกิจดีเสมอไป)';
+});
+bearBtn.addEventListener('click', () => {
+  bearBtn.classList.add('active'); bullBtn.classList.remove('active');
+  steepenPanel.textContent = 'อันตรายกว่า — ดอกเบี้ยระยะยาวขึ้นเร็วกว่าระยะสั้น เพราะตลาดไม่มั่นใจระยะยาว กลัวรัฐบาลพิมพ์เงินเพิ่ม ขาดดุลงบประมาณมากขึ้น เงินเฟ้อฝังตัวนานกว่าที่คิด';
+});
+
+// reasons tabs
+const reasonData = {
+  healthy:{title:'เศรษฐกิจดี (Healthy)', body:'GDP โต ตัวเลขจ้างงานดี ดอกเบี้ยขึ้นตามธรรมชาติเพราะเศรษฐกิจร้อนแรง — เป็นสัญญาณบวก ดอลลาร์มักแข็งตาม'},
+  fiscal:{title:'กังวลขาดดุล (Fiscal Worry)', body:'ตลาดกลัวรัฐบาลขาดดุลงบประมาณเกินตัว พิมพ์เงินเพิ่ม ออกพันธบัตรถี่เกินไป นักลงทุนเทขายตัวยาว ต้องจ่าย Term Premium สูงขึ้น — ไม่ใช่บูแบบ Healthy'},
+  liquidity:{title:'Liquidity Stress', body:'ช่วง QT เฟดดึงเงินกลับ ดอลลาร์ขาดตลาด คนแย่งกันหาแคช ปิด Leverage — อันตรายที่สุดเพราะกระทบทุก Asset พร้อมกัน'}
+};
+document.querySelectorAll('.rt-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.rt-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const d = reasonData[btn.dataset.r];
+    document.getElementById('reason-title').textContent = d.title;
+    document.getElementById('reason-body').textContent = d.body;
+  });
+});
+
+// yen scenario
+const scBreak = document.getElementById('sc-break');
+const scBurst = document.getElementById('sc-burst');
+const scenarioPanel = document.getElementById('scenario-panel');
+scBreak.addEventListener('click', () => {
+  scBreak.classList.add('active'); scBurst.classList.remove('active');
+  scenarioPanel.innerHTML = '🔴 เยนแข็งขึ้นเร็ว → แครี่เทรดเริ่ม Unwind → คนที่กู้เยนไปซื้อหุ้น/คริปโตต้องเทขายสินทรัพย์หาแคชคืนเยน → ยิ่งซื้อเยนคืน เยนยิ่งแข็ง → ลูกโซ่กดดันสินทรัพย์เสี่ยงทั่วโลก';
+});
+scBurst.addEventListener('click', () => {
+  scBurst.classList.add('active'); scBreak.classList.remove('active');
+  scenarioPanel.innerHTML = '🟠 เยนอ่อนเกินไป → ของนำเข้า (พลังงาน-อาหาร) แพงขึ้น → เงินเฟ้อญี่ปุ่นพุ่ง ประชาชนเดือดร้อน → BOJ ต้องเข้าแทรกแซง (เทขายดอลลาร์ที่ตัวเองถือ ซื้อเยนกลับ)';
+});
+
+// checklist
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('checked');
+    const box = item.querySelector('.box');
+    box.textContent = item.classList.contains('checked') ? '✓' : '';
+    const total = document.querySelectorAll('.check-item').length;
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    document.getElementById('counter').textContent = checked + '/' + total + ' เช็คแล้ว';
+  });
+});
+</script>
+</body>
+</html>
